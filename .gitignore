@@ -27,3 +27,4 @@ htmlcov/
 # Project specific.
 data/
 static/style/*.css
+node_modules
