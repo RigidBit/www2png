@@ -27,7 +27,7 @@ def generate_screenshot(uuid, settings):
 		driver.set_window_size(window_x, window_y)
 		driver.get(url)
 
-		if settings["fullPage"] == True:
+		if settings["full_page"] == True:
 			current_x = 0
 			current_y = 0
 			for x in range(0, settings["fullPageMaxLoops"]):
@@ -44,7 +44,7 @@ def generate_screenshot(uuid, settings):
 
 		if settings["delay"] > 0:
 			time.sleep(settings["delay"])
-		elif settings["fullPage"] == True:
+		elif settings["full_page"] == True:
 			time.sleep(1)
 
 		driver.save_screenshot(screenshot_filename)

@@ -34,6 +34,6 @@ def screenshot_settings(form_values):
 	settings["width"] = min(list(map(int, settings["resolution"].split("x")))[0], list(map(int, settings["maxResolution"].split("x")))[0])
 	settings["maxHeight"] = list(map(int, settings["maxResolution"].split("x")))[1]
 	settings["maxWidth"] = list(map(int, settings["maxResolution"].split("x")))[0]
-	settings["fullPage"] = settings["fullPage"] == "true" or settings["fullPage"] == "True" or settings["fullPage"] == "1" or settings["fullPage"] == True
+	settings["full_page"] = settings["full_page"] == "true" or settings["full_page"] == "True" or settings["full_page"] == "1" or settings["full_page"] == True
 
 	return settings
