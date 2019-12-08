@@ -6,13 +6,66 @@
 	margin-bottom: $spacing-lead-tail-thin;
 	position: relative;
 
-	.video
+	.artwork
 	{
 		height: 100%;
 		overflow: hidden;
 		position: absolute;
 		width: 100%;
 		z-index: -1;
+
+		.screenshot-container
+		{
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr;
+			height: 100%;
+
+			.column-1,
+			.column-2,
+			.column-3
+			{
+				background-size: 100% auto;
+				animation-duration: 600s;
+				animation-timing-function: linear;
+				animation-iteration-count: infinite;
+			}
+
+			.column-1
+			{
+				background-image: url("../image/screenshots-column-1.jpg");
+				animation-name: bg-animation-1;
+			}
+
+			.column-2
+			{
+				background-image: url("../image/screenshots-column-2.jpg");
+				animation-name: bg-animation-2;
+			}
+
+			.column-3
+			{
+				background-image: url("../image/screenshots-column-3.jpg");
+				animation-name: bg-animation-3;
+			}
+
+			@keyframes bg-animation-1
+			{
+				from { background-position: 0 0; }
+				to { background-position: 0 -3000%; }
+			}
+
+			@keyframes bg-animation-2
+			{
+				from { background-position: 0 500px; }
+				to { background-position: 0 3000%; }
+			}
+
+			@keyframes bg-animation-3
+			{
+				from { background-position: 0 0; }
+				to { background-position: 0 -3000%; }
+			}
+		}
 
 		.cover
 		{
@@ -48,7 +101,6 @@
 		.text
 		{
 			color: white;
-			flex: 1 1 auto;
 			font-size: 16px;
 			margin: 0 auto 0 auto;
 			max-width: 600px;
