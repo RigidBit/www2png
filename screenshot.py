@@ -22,6 +22,7 @@ def generate_screenshot(uuid, settings):
 		options.binary_location = "/usr/bin/google-chrome"
 
 		driver = webdriver.Chrome(chrome_options=options)
+		driver.set_page_load_timeout(int(os.getenv("SELENIUM_TIMEOUT")))
 		driver.set_window_position(0, 0)
 		driver.set_window_size(window_x, window_y)
 		driver.get(url)
