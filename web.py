@@ -88,13 +88,32 @@ def web_image(uuid):
 		filename = uuid+".png"
 		return send_from_directory(os.getenv("WWW2PNG_SCREENSHOT_DIR"), filename, mimetype=mimetypes.guess_type(filename)[0])
 
+@app.route("/web/proof/<uuid>", methods=["GET"])
+def web_proof(uuid):
+	connection = db.connect()
+	exists = db.check_data_uuid_exists(connection, uuid)
+	if exists:
+		data_record = db.get_data_record_by_uuid(connection, uuid)
+		proof_available = True if int((datetime.datetime.now() - data_record["timestamp"]).total_seconds()) > int(os.getenv("RIGIDBIT_PROOF_DELAY")) else False
+		if proof_available:
+			headers = {"api_key": os.getenv("RIGIDBIT_API_KEY")}
+			url = os.getenv("RIGIDBIT_BASE_URL") + "/api/trace-block/" + str(data_record["block_id"])
+			content = requests.get(url, headers=headers).content
+			return Response(content, mimetype="application/json", headers={"Content-disposition": f"attachment; filename={uuid}.json"})
+	dirs = conv.html_dirs()
+	return render_template("404.html", page_title="WWW2PNG - Error 404: Not Found", data={"uuid": uuid}, dirs=dirs), 404
+
 @app.route("/web/view/<uuid>", methods=["GET"])
 def web_view(uuid):
 	connection = db.connect()
-	data = db.get_data_record_by_uuid(connection, uuid)
-	data = conv.data_record_to_web_view(data)
 	dirs = conv.html_dirs()
-	return render_template("web_view.html", page_title="WWW2PNG - Webpage Screenshot Service with Blockchain Anchoring", dirs=dirs, data=data)
+	exists = db.check_data_uuid_exists(connection, uuid)
+	if exists:
+		data = db.get_data_record_by_uuid(connection, uuid)
+		data = conv.data_record_to_web_view(data)
+		return render_template("web_view.html", page_title="WWW2PNG - Webpage Screenshot Service with Blockchain Anchoring", dirs=dirs, data=data)
+	else:
+		return render_template("404.html", page_title="WWW2PNG - Error 404: Not Found", data={"uuid": uuid}, dirs=dirs), 404
 
 @app.route("/", methods=["GET"])
 def root():

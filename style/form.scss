@@ -1,7 +1,7 @@
 $background: #fcfcfc;
 $background-active: rgba(255, 255, 255, 0.2);
 
-a.button:focus,
+.button:focus,
 button:focus,
 input:focus,
 select:focus,
@@ -11,7 +11,7 @@ textarea:focus
 	// outline: none;
 }
 
-a.button,
+.button,
 button,
 input,
 select,
@@ -43,7 +43,7 @@ textarea
 	background: $background;
 	border: $border-default;
 	border-radius: $border-radius-input;
-	padding: $padding-input $padding-input * 1.5;
+	padding: $padding-input;
 	width: 100%;
 
 	&:active,
@@ -70,15 +70,41 @@ input[type="text"]
 	overflow: visible;
 }
 
-a.button,
+.buttonjjjj
+{
+	background: $color-www2png-green;
+	border: none;
+	border-radius: $border-radius-input;
+	color: white;
+	cursor: pointer;
+	display: inline-block;
+	margin: $margin-button;
+	outline: none;
+	padding: $padding-input $padding-input*2 $padding-input+2px $padding-input*2;
+	text-decoration: none;
+
+	&:active,
+	&:hover
+	{
+		background: darken($color-www2png-green, 10%);
+	}
+
+	.fas
+	{
+		margin-right: $margin-button;
+	}
+}
+
+
+.button,
 button,
 input[type="button"],
 input[type="submit"],
 {
-	background: white;
+	background: $color-www2png-green;
 	border: $border-default;
 	border-radius: $border-radius-input;
-	color: $font-color-button;
+	color: white;
 	cursor: pointer;
 	display: inline-block;
 	padding: $padding-input*0.75 $padding-input $padding-input*0.75 $padding-input;

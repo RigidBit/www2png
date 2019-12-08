@@ -23,6 +23,9 @@
 			<div class="metric detail timestamp">Timestamp</div><div class="value detail timestamp"><script>const date = new Date({{data.timestamp}} * 1000);document.write(date.toLocaleString());</script></div>
 			<div class="metric detail status">Status</div><div class="value detail status">{{data.status}}</div>
 			<div class="metric detail proof">Blockchain Proof</div><div class="value detail proof">{% if data.proof_available %} available {% else %} pending {% endif %}</div>
+			{% if data.proof_available %}
+			<div class="metric detail download">Download</div><div class="value detail download"><a class="proof button" href="/web/proof/{{ data.uuid }}" target="_blank"><i class="fas fa-download icon"></i>Download Proof</a></div>
+			{% endif %}
 		</div>
 	</div>
 </div>

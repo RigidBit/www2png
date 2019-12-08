@@ -30,29 +30,3 @@
 {
 	margin: 0
 }
-
-.button
-{
-	// background: #2374ab;
-	background: #0bc75b;
-	border: none;
-	border-radius: $border-radius-input;
-	color: white;
-	cursor: pointer;
-	display: inline-block;
-	margin: $margin-button;
-	outline: none;
-	padding: $padding-input $padding-input*2 $padding-input+2px $padding-input*2;
-	text-decoration: none;
-
-	&:active,
-	&:hover
-	{
-		background: darken(#0bc75b, 10%);
-	}
-
-	.fas
-	{
-		margin-right: $margin-button;
-	}
-}

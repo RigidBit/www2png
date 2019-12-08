@@ -7,6 +7,11 @@ import time
 def connect():
 	return psycopg2.connect(dbname=os.getenv("POSTGRESQL_DB"), host=os.getenv("POSTGRESQL_HOST"), port=os.getenv("POSTGRESQL_PORT"), user=os.getenv("POSTGRESQL_USER"), password=os.getenv("POSTGRESQL_PASS"))
 
+def check_data_uuid_exists(connection, uuid):
+	cursor = connection.cursor()
+	cursor.execute("SELECT COUNT(*) FROM data WHERE uuid=%s", (uuid,))
+	return cursor.fetchone()[0] >= 1
+
 def create_data_record(connection, data):
 	keys = list(data.keys())
 	values = list(map(str, data.values()))
