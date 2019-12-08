@@ -5,6 +5,7 @@ import os
 import psycopg2
 import sys
 
+import blockchain as b
 import database as db
 import screenshot as ss
 
@@ -30,11 +31,11 @@ while True:
 		log_message(f"Generated screenshot: {filename_screenshot}")
 
 		# Generate blocks.
-		# block_summary = generate_twitter_summary_block(summary, summary["data"]["id_str"])
-		# block_image = generate_twitter_screenshot_block(filename_screenshot, summary["data"]["id_str"])
+		block = b.generate_screenshot_block(filename_screenshot)
+		log_message(f"Block created: {block['id']}")
 
 		# Update data record.
-		data = {"queued": "false"}
+		data = {"queued": "false", "block_id": block["id"]}
 		db.update_data_record_by_uuid(connection, payload["uuid"], data)
 		log_message(f"Updated data record: {payload['uuid']}")
 
