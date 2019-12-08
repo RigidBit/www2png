@@ -1,0 +1,23 @@
+@import "./variables.scss";
+
+header
+{
+	background: #eeeeee;
+	height: 50px;
+	padding: $padding-default;
+
+	.logo
+	{
+		float: left;
+		position: relative;
+		top: 5px;
+		height: 20px;
+	}
+
+	.twitter-follow-button
+	{
+		float: right;
+		height: 30px;
+		margin-top: 5px;
+	}
+}

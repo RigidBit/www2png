@@ -1,0 +1,65 @@
+@import "./variables.scss";
+
+.main-content-container.contact
+{
+	.kwes-form
+	{
+		max-width: 550px;
+		margin: $spacing-lead-tail-default auto $spacing-lead-tail-default auto;
+		width: 100%;
+
+		h1
+		{
+			text-align: center;
+		}
+
+		label
+		{
+			display: block;
+			font-size: 12px;
+			margin-bottom: $margin-default;
+		}
+
+		input[type=email],
+		input[type=text],
+		textarea
+		{
+			background: #fcfcfc;
+			border: 1px solid $border-color-light;
+			border-radius: $border-radius-input;
+			display: block;
+			font-size: 16px;
+			margin-bottom: $margin-default;
+			padding: $padding-input-thick;
+			width: 100%;
+
+			&:active,
+			&:focus
+			{
+				background: white;
+				border: 1px solid #2374ab;
+				outline: none;
+			}
+		}
+
+		textarea[name=message]
+		{
+			height: 80px;
+		}
+
+		button[type=submit]
+		{
+			margin: 0;
+			padding: $padding-input-thick * 1.5;
+			width: 100%;
+		}
+
+		.kw-credit
+		{
+			display: none !important;
+			height: 0 !important;
+			opacity: 0;
+			overflow: hidden !important;
+		}
+	}
+}

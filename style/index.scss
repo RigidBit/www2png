@@ -1,0 +1,104 @@
+@import "./variables.scss";
+
+.focus-container
+{
+	height: 500px;
+	margin-bottom: $spacing-lead-tail-thin;
+	position: relative;
+
+	.video
+	{
+		height: 100%;
+		overflow: hidden;
+		position: absolute;
+		width: 100%;
+		z-index: -1;
+
+		.cover
+		{
+			background: rgba(0, 0, 0, 0.6);
+			height: 100%;
+			left: 0;
+			position: absolute;
+			top: 0;
+			width: 100%;
+		}
+	}
+
+	.focus
+	{
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 100%;
+		z-index: 100;
+
+		.logo
+		{
+			margin-bottom: $margin-thick;
+			text-align: center;
+	
+			img
+			{
+				max-width: 400px;
+				width: calc(100% - 20px);
+			}
+		}
+
+		.text
+		{
+			color: white;
+			flex: 1 1 auto;
+			font-size: 16px;
+			margin: 0 auto 0 auto;
+			max-width: 600px;
+			min-width: 300px;
+			padding: $padding-default;
+
+			.free
+			{
+				margin-top: $margin-thick * 2;
+				text-align: center;
+			}
+		}
+	}
+}
+
+.web-form-container
+{
+	background: $background-color-box;
+	border-radius: $border-radius-default;
+	display: block;
+	margin: $margin-default auto 50px auto;
+	padding: $padding-thick;
+	width: 320px;
+
+	h1
+	{
+		margin-bottom: $margin-thick;
+		text-align: center;
+	}
+
+	label
+	{
+		display: block;
+		margin-bottom: $margin-default;
+		text-align: center;
+	}
+
+	#showAdvanced
+	{
+		font-size: 0.8rem;		
+	}
+
+	.advanced
+	{
+		display: none;
+	}
+
+	button[type="submit"]
+	{
+		display: block;
+		margin: 0 auto 0 auto;
+	}
+}

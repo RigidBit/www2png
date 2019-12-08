@@ -1,0 +1,77 @@
+@import "./variables.scss";
+
+.web-view
+{
+	display: grid;
+	grid-gap: $margin-default $margin-default;
+	grid-template-columns: minmax(0, 5fr) minmax(0, 3fr);
+	padding: $padding-default;
+	width: 100%;
+	margin: 0;
+
+	@media screen and (max-width: #{map-get($breakpoints, "highres")})
+	{
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	}
+
+	@media screen and (max-width: #{map-get($breakpoints, "desktop")})
+	{
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	@media screen and (max-width: #{map-get($breakpoints, "tablet")})
+	{
+		padding: $padding-default 0;
+	}
+
+	.screenshot,
+	.details
+	{
+		background: $background-color-box;
+		border-radius: $border-radius-default; 
+		padding: $padding-default;
+
+		@media screen and (max-width: #{map-get($breakpoints, "tablet")})
+		{
+			border-radius: 0;
+		}
+	}
+
+	.screenshot .screenshot-container
+	{
+		img.screenshot
+		{
+			// border: 1px solid $border-color-light;
+			display: block;
+			margin: 0 auto 0 auto;
+			max-height: 800px;
+			max-width: 100%;
+
+			&.pending
+			{
+				margin-top: 30px;
+			}
+
+			&.unavailable
+			{
+				margin-top: 20px;
+				width: 100px;
+			}
+		}
+	}
+
+	.details .details-container
+	{
+		display: grid;
+		grid-column-gap: $margin-default;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+
+		.detail
+		{
+			overflow: hidden;
+			padding: $padding-thin 0;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+	}
+}

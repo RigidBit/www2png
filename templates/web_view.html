@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% include "header.html" %}
+<div class="main-content-container web-view">
+	<div class="screenshot">
+		<h2>Screenshot</h2>
+		<div class="screenshot-container">
+			{% if data.screenshot_available %}
+				<a href="/web/image/{{data.uuid}}" target="_blank"><img class="screenshot" src="/web/image/{{data.uuid}}" alt="Screenshot {{data.uuid}}"></a>
+			{% elif data.queued %}
+				<img class="screenshot pending" src="/{{dirs.image_dir}}/pending.svg" alt="Screenshot Pending">
+			{% else %}
+				<img class="screenshot unavailable" src="/{{dirs.image_dir}}/trash-can.png" alt="Screenshot Unavailable">
+			{% endif %}
+		</div>
+	</div>
+	<div class="details">
+		<h2>Details</h2>
+		<div class="details-container">
+			<div class="metric detail id">ID</div><div class="value detail id"><a href="/web/view/{{data.uuid}}">{{data.uuid}}</a></div>
+			<div class="metric detail url">URL</div><div class="value detail url"><a href="{{data.url}}" target="_blank">{{data.url}}</a></div>
+			<div class="metric detail timestamp">Timestamp</div><div class="value detail timestamp"><script>const date = new Date({{data.timestamp}} * 1000);document.write(date.toLocaleString());</script></div>
+			<div class="metric detail status">Status</div><div class="value detail status">{{data.status}}</div>
+			<div class="metric detail proof">Blockchain Proof</div><div class="value detail proof">{% if data.proof_available %} available {% else %} pending {% endif %}</div>
+		</div>
+	</div>
+</div>
+<script>
+$(document).ready(function()
+{
+	if("{{data.status}}" === "pending")
+	{
+		setTimeout(function()
+		{
+			location.reload();
+		}, 5000);
+	}
+});
+</script>
+{% include "footer.html" %}
+{% endblock %}

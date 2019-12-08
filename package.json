@@ -1,0 +1,23 @@
+{
+  "name": "www2png",
+  "version": "1.0.0",
+  "description": "This is the primary codebase for the www2png web application.",
+  "private": true,
+  "scripts":
+  {
+    "start": "npx webpack --watch --config webpack.config.js",
+    "build": "npx webpack --config webpack.config.js"
+  },
+  "author": "",
+  "license": "",
+  "devDependencies": {
+    "css-loader": "^3.2.1",
+    "ignore-emit-webpack-plugin": "^2.0.2",
+    "mini-css-extract-plugin": "^0.8.0",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.1",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  }
+}

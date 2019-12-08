@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% include "header.html" %}
+<div class="main-content-container">
+	<div class="page-404">
+		<h1>404</h1>
+		ID not found: {{ data.uuid }}
+	</div>
+</div>
+{% include "footer.html" %}
+{% endblock %}

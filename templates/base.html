@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+	<title>{{ page_title }}</title>
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="@www2png">
+	<meta name="twitter:title" content="Free blockchain enabled web screenshot service!">
+	<meta name="twitter:description" content='Capture screenshots of any website using our website or REST API with added blockchain proofs!'>
+	<meta name="twitter:image" content="https://www2png.com/static/image/www2png-twitter.png">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800&display=swap">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="/{{ dirs.style_dir }}/site.css">
+	<link rel="stylesheet" type="text/css" href="https://unpkg.com/native-toast@2.0.0/dist/native-toast.css">
+	<link rel="icon" href="/{{ dirs.image_dir }}/www2png-favicon.png">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
+	<script src="https://unpkg.com/native-toast@2.0.0/dist/native-toast.min.js"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-146470312-4"></script>
+	<script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'UA-146470312-4');</script>
+</head>
+
+<body>
+{% block body %}{% endblock %}
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</body>
+
+</html>

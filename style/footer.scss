@@ -1,0 +1,61 @@
+@import "./variables.scss";
+
+footer
+{
+	background: #eeeeee;
+	overflow: hidden;
+	position: relative;
+
+	.logo
+	{
+		display: block;
+		margin: $margin-thick auto $margin-thick auto;
+		width: 200px;
+	}
+
+	.text
+	{
+		margin: 0 auto $margin-default auto;
+		max-width: 600px;
+		padding: 0 $padding-default 0 $padding-default;
+		width: 100%;
+
+		.links
+		{
+			padding: 0;
+			text-align: center;
+
+			ul
+			{
+				list-style: none;
+				margin-bottom: $margin-default;
+				padding: 0;
+
+				li
+				{
+					display: inline-block;
+					padding: $padding-default;
+
+					@media screen and (max-width: #{map-get($breakpoints, "tablet")})
+					{
+						display: block;
+						padding: 0;
+					}
+
+					a
+					{
+						display: block;
+						margin-bottom: $margin-thin;
+					}
+				}
+			}
+		}
+	}
+
+	.copyright
+	{
+		font-size: 11px;
+		text-align: center;
+		width: 100%;
+	}
+}

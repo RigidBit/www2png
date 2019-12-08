@@ -1,0 +1,57 @@
+@import "./normalize.scss";
+
+@import "./variables.scss"; // Must be imported first.
+@import "./mixins.scss"; // Must be imported after variables.
+
+@import "./base.scss";
+@import "./form.scss";
+@import "./contact.scss";
+@import "./header.scss";
+@import "./footer.scss";
+@import "./index.scss";
+@import "./privacy_policy.scss";
+@import "./terms_of_service.scss";
+@import "./web_view.scss";
+@import "./404.scss";
+@import "./500.scss";
+
+.main-content-container
+{
+	min-width: 375px;
+}
+
+.clickable
+{
+	cursor: pointer;
+}
+
+.no-margin
+{
+	margin: 0
+}
+
+.button
+{
+	// background: #2374ab;
+	background: #0bc75b;
+	border: none;
+	border-radius: $border-radius-input;
+	color: white;
+	cursor: pointer;
+	display: inline-block;
+	margin: $margin-button;
+	outline: none;
+	padding: $padding-input $padding-input*2 $padding-input+2px $padding-input*2;
+	text-decoration: none;
+
+	&:active,
+	&:hover
+	{
+		background: darken(#0bc75b, 10%);
+	}
+
+	.fas
+	{
+		margin-right: $margin-button;
+	}
+}

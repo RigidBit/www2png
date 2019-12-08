@@ -1,0 +1,84 @@
+@import "./variables.scss";
+
+html
+{
+	box-sizing: border-box;
+	color: $font-color-default;
+	font-family: $font-family-default;
+	font-size: $font-size-default;
+	line-height: 1.5em;
+	word-break: break-word;
+}
+
+*, *:before, *:after
+{
+	box-sizing: inherit;
+}
+
+body
+{
+	background: $background-color-default;
+}
+
+code
+{
+	background: #20262e;
+	color: #f8f8f2;
+	display: block;
+	font-size: 12px;
+	line-height: 1.2em;
+	overflow: auto;
+	overflow-y: hidden;
+	padding: $padding-default;
+	white-space: pre-wrap;
+}
+
+h1, h2, h3
+{
+	color: $font-color-default;
+}
+
+h1
+{
+	font-size: 24px;
+	font-weight: 600;
+	margin: 0 0 .4em 0;
+}
+
+h2
+{
+	font-size: 18px;
+	font-weight: 600;
+	margin: 0 0 .3em 0;
+}
+
+h3
+{
+	font-weight: 600;
+}
+
+p
+{
+	margin: 0 0 1em 0;
+}
+
+a
+{
+	color: #555555;
+	white-space: nowrap;
+}
+
+a.light
+{
+	color: white;
+}
+
+ul
+{
+	margin: $margin-thin 0 $margin-thin 0;
+
+	li
+	{
+		margin-bottom: $margin-thin;
+	}
+}

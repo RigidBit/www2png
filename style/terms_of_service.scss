@@ -1,0 +1,130 @@
+@import "./variables.scss";
+
+.terms-of-service
+{
+	padding: $spacing-lead-tail-thin $padding-default $spacing-lead-tail-thin $padding-default;
+
+	h1
+	{
+		margin-bottom: $margin-default * 5;
+		text-align: center;
+	}
+
+	.blockchain-proofs,
+	.screenshot-hash,
+	.screenshot-proof,
+	.summary,
+	.summary-string,
+	.summary-hash
+	{
+		border: 1px solid $border-color-default;
+		border-radius: $border-radius-input;
+		margin-bottom: $margin-default;
+		padding: $padding-default;
+	}
+
+	.blockchain-proofs
+	{
+		p
+		{
+			padding-top: $padding-default;
+		}
+	}
+
+	.screenshot-capture-container
+	{
+		display: flex;
+		justify-content: center;
+		margin-bottom: $margin-default;
+
+		@media screen and (max-width: #{map-get($breakpoints, "highres")})
+		{
+			flex-wrap: wrap;
+		}
+
+		.screenshot-outer-container
+		{
+			flex: 0 0 auto;
+			padding: 0 $padding-thin 0 0;
+
+			@media screen and (max-width: #{map-get($breakpoints, "tablet")})
+			{
+				flex: 1 1 auto;
+				margin-bottom: $margin-default;
+				padding: 0;
+				text-align: center;
+			}
+
+			h2
+			{
+				height: 24px;
+				text-align: center;
+			}
+	
+			.screenshot-container
+			{
+				border: 1px solid $border-color-default;
+				border-radius: $border-radius-strong;
+				height: calc(100% - 24px - 10px);
+				overflow: hidden;
+
+				.screenshot
+				{
+					width: 100%;
+				}
+			}
+		}
+
+		.details-container
+		{
+			flex: 1 1 auto;
+			padding: 0 0 0 $padding-thin;
+
+			@media screen and (max-width: #{map-get($breakpoints, "highres")})
+			{
+				padding: 0;
+				width: 100%;
+			}
+
+			h2
+			{
+				height: 24px;
+				text-align: center;
+			}
+
+			.details-table-container
+			{
+				border: 1px solid $border-color-default;
+				border-radius: $border-radius-default;
+				height: calc(100% - 24px - 10px);
+				padding: $padding-default;
+
+				.details
+				{
+					font-size: 14px;
+					margin: 0 auto 0 auto;
+					width: 100%;
+
+					td
+					{
+						vertical-align: top;
+					}
+
+					td:nth-child(1)
+					{
+						padding-right: $padding-default;
+						white-space: nowrap;
+					}
+				}
+			}
+		}
+	}
+
+	.summary-string
+	{
+		code
+		{
+			white-space: normal;
+		}
+	}
+}

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% include "header.html" %}
+<div class="focus-container">
+	<div class="video">
+		<div class="cover"></div>
+	</div>
+	<div class="focus">
+		<div class="logo">
+			<img src="/{{ dirs.image_dir }}/www2png-logo-white.png" alt="Www2png Logo">
+		</div>
+		<div class="text">
+			<p>
+				Screenshot webpages using our website or automate it using our REST API.
+			</p>
+			<p>
+				All screenshots are automatically anchored to an immutable blockchain using <a class="light" href="https://www.rigidbit.com/" target="_blank">RigidBit</a> and <a class="light" href="https://www.ethereum.org/" target="_blank">Ethereum</a>.
+			</p>
+			<p class="free">
+				WWW2PNG is a completely free service!
+			</p>
+		</div>
+	</div>
+</div>
+<div class="main-content-container">
+	<div class="web-form-container">
+		<h1>Try it Now</h1>
+		<form method="POST" action="/web/capture">
+			<label for="url">
+				Enter the URL to Screenshot:
+				<input id="url" type="url" name="url" placeholder="https://website.com" required>
+			</label>
+			<label>
+				<a id="showAdvanced" href="#showAdvanced">Show Advanced</a>
+			</label>
+			<label for="resolution" class="advanced">
+				Resolution:
+				<select id="resolution" name="resolution">
+					<option value="1920x1080">1920x1080 (16:9 1080p)</option>
+					<option value="1366x768" selected>1366x768 (16:9 Desktop)</option>
+					<option value="1280x720">1280x720 (16:9 720p)</option>
+					<option value="1024x768">1024x768 (4:3 Desktop)</option>
+					<option value="800x600">800x600 (4:3 Desktop)</option>
+					<option value="1024x1366">1024x1366 iPad Pro</option>
+					<option value="768x1024">768x1024 (iPad 1/2/3/4/Air/Mini)</option>
+					<option value="414x896">414x896 (iPhone XS Max/XR)</option>
+					<option value="375x812">375x812 (iPhone X/XS)</option>
+					<option value="414x736">414x736 (iPhone 6/7/8 Plus)</option>
+					<option value="375x667">375x667 (iPhone 6/7/8)</option>
+					<option value="320x568">375x667 (iPhone 5)</option>
+				</select>
+			</label>
+			<label for="fullPage" class="advanced">
+				Capture Full Page:
+				<select id="fullPage" name="fullPage">
+					<option value="false">False</option>
+					<option value="true">True</option>
+				</select>
+			</label>
+			<label for="delay" class="advanced">
+				Capture Delay:
+				<select id="delay" name="delay">
+					<option value="0">No Delay</option>
+					<option value="1">1 Second</option>
+					<option value="2">2 Seconds</option>
+					<option value="3">3 Seconds</option>
+					<option value="4">4 Seconds</option>
+					<option value="5">5 Seconds</option>
+				</select>
+			</label>
+			<button type="submit" class="button">Capture PNG</button>
+		</form>
+	</div>
+</div>
+<script>
+$(document).ready(function()
+{
+	$("#showAdvanced").click(function(e)
+	{
+		e.preventDefault();
+
+		const $link = $(e.currentTarget);
+		const linkText = $link.text();
+
+		if(linkText == "Show Advanced")
+		{
+			$link.text("Hide Advanced");
+			$(".advanced").show();
+		}
+		else
+		{
+			$link.text("Show Advanced");
+			$(".advanced").hide();
+		}
+	})
+});
+</script>
+{% include "footer.html" %}
+{% endblock %}

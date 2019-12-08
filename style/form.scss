@@ -1,0 +1,190 @@
+$background: #fcfcfc;
+$background-active: rgba(255, 255, 255, 0.2);
+
+a.button:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus
+{
+	box-shadow: 0 0 0 2px $background-active;
+	// outline: none;
+}
+
+a.button,
+button,
+input,
+select,
+textarea
+{
+	color: $font-color-default;
+	font-size: 1rem;
+	line-height: 1.2rem;
+}
+
+input::placeholder
+{
+	color: $font-color-disabled;
+}
+
+input[type="checkbox"]
+{
+	position: relative;
+	top: 2px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+select,
+textarea
+{
+	background: $background;
+	border: $border-default;
+	border-radius: $border-radius-input;
+	padding: $padding-input $padding-input * 1.5;
+	width: 100%;
+
+	&:active,
+	&:hover
+	{
+		background: $background-active;
+	}
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+textarea
+{
+	&:invalid:focus
+	{
+		background: rgba(#ff0000, 0.1);
+	}
+}
+
+input[type="text"]
+{
+	overflow: visible;
+}
+
+a.button,
+button,
+input[type="button"],
+input[type="submit"],
+{
+	background: white;
+	border: $border-default;
+	border-radius: $border-radius-input;
+	color: $font-color-button;
+	cursor: pointer;
+	display: inline-block;
+	padding: $padding-input*0.75 $padding-input $padding-input*0.75 $padding-input;
+	text-decoration: none;
+	user-select: none;
+
+	&:hover
+	{
+		background: $color-grey-dark;
+		border-color: $color-grey-dark;
+		color: white;
+	}
+
+	&:active
+	{
+		background: $color-grey-light;
+		border-color: $color-grey-light;
+		color: white;
+	}
+
+	&:disabled,
+	&.disabled
+	{
+		border-color: $border-color-disabled;
+		color: $font-color-disabled;
+
+		&:active,
+		&:hover
+		{
+			background: $background;
+			border-color: $border-color-disabled;
+		}
+	}
+
+	&.highlight
+	{
+		@keyframes blink
+		{
+			0% { box-shadow: 0 0 0 2px #555555; } 
+			10% { box-shadow: 0 0 0 2px #655352; } 
+			20% { box-shadow: 0 0 0 2px #75514f; } 
+			30% { box-shadow: 0 0 0 2px #85504c; } 
+			40% { box-shadow: 0 0 0 2px #954e49; } 
+			50% { box-shadow: 0 0 0 2px #a54c46; } 
+			60% { box-shadow: 0 0 0 2px #b44a42; } 
+			70% { box-shadow: 0 0 0 2px #c4483f; } 
+			80% { box-shadow: 0 0 0 2px #d4473c; } 
+			90% { box-shadow: 0 0 0 2px #e44539; } 
+			100% { box-shadow: 0 0 0 2px #f44336; } 
+		}
+
+		animation: blink 1s step-end infinite alternate;
+
+		&:hover
+		{
+			animation: none;
+		}
+	}
+
+	.icon
+	{
+		margin-right: 0.3em;
+	}
+}
+
+select,
+textarea
+{
+	&:disabled,
+	&.disabled
+	{
+		border-color: $border-color-disabled;
+		color: $font-color-disabled;
+
+		&:active,
+		&:hover
+		{
+			background: $background;
+			border-color: $border-color-disabled;
+		}
+	}
+}
+
+select
+{
+	padding: 6px $padding-input 5px $padding-input;
+
+	option
+	{
+		padding: 0;
+	}
+}
+
+textarea
+{
+	padding: $padding-input;
+	-webkit-appearance: none; // Remove the top shadow on iOS.
+}
+
+label
+{
+	display: block;
+	position: relative;
+}
+
+input[type="color"]
+{
+	cursor: pointer;
+}

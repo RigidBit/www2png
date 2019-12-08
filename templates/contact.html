@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% include "header.html" %}
+<div class="main-content-container contact">
+	<div class="kwes-form">
+		<h1>Contact Form</h1>
+		<form method="POST" action="https://kwes.io/api/foreign/forms/uPEH0o96Lu9XxoeanrPC">
+		<label>
+			Name
+			<input type="text" name="name" rules="required|min:1|max:64">
+		</label>
+		<label>
+			Email
+			<input type="email" name="email" rules="required|email|max:128">
+		</label>
+		<label>
+			Message
+			<textarea name="message" rules="required|min:1|max:10000"></textarea>
+		</label>
+		<button type="submit" class="button">Send</button>
+		</form>
+	</div>
+</div>
+{% include "footer.html" %}
+<script src="https://kwes.io/js/kwes.js"></script>
+{% endblock %}
