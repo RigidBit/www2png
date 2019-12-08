@@ -43,6 +43,24 @@ def privacy_policy():
 
 ##### DYNAMIC ROUTES #####
 
+@app.route("/web/buried", methods=["GET"])
+@app.route("/web/buried/<action>/<int:job_id>", methods=["GET"])
+def web_buried(action=None, job_id=None):
+	try:
+		if action == "delete" and job_id is not None:
+			queue.delete(job_id)
+		elif action == "kick" and job_id is not None:
+			queue.kick_job(job_id)
+	except greenstalk.NotFoundError:
+		return redirect("/web/buried", code=302)
+	try:
+		job = queue.peek_buried()
+		data = {"job_body": job.body, "job_id": job.id}
+	except greenstalk.NotFoundError:
+		data = {}
+	dirs = conv.html_dirs()
+	return render_template("buried.html", page_title="WWW2PNG - Manage Buried", data=data, dirs=dirs)
+
 @app.route("/web/capture", methods=["POST"])
 def web_capture():
 	connection = db.connect()

@@ -4,28 +4,23 @@
 {% include "header.html" %}
 {% if data.job_id is defined %}
 <div class="main-content-container buried">
-	<h1>Job ID {{ data.job_id }} - <a href="https://twitter.com/{{ data.screen_name }}/status/{{ data.id_str }}" target="_blank">{{ data.id_str }}</a></h1>
-
 	<form id="form" method="get">
 		<button id="delete" class="button" type="button">Delete</button>
 		<button id="kick" class="button" type="button">Retry</button>
 	</form>
-
-	<iframe id="preview" border=0 frameborder=0 src=""></iframe>
-
+	<div class="data">
+		{{data}}
+	</div>
 	<script>
-		const url = "https://twitframe.com/show?url=" + encodeURIComponent("https://twitter.com/" + "{{ data.screen_name }}" + "/status/" + "{{ data.id_str }}");
-		$("#preview").prop("src", url);
-		
 		$("#delete").on("click", (e)=>
 		{
-			$("#form").prop("action", "/buried/delete/{{ data.job_id }}");
+			$("#form").prop("action", "/web/buried/delete/{{ data.job_id }}");
 			$("#form").submit();
 		});
 
 		$("#kick").on("click", (e)=>
 		{
-			$("#form").prop("action", "/buried/kick/{{ data.job_id }}");
+			$("#form").prop("action", "/web/buried/kick/{{ data.job_id }}");
 			$("#form").submit();
 		});
 	</script>

@@ -1,0 +1,20 @@
+@import "./variables.scss";
+
+.main-content-container.buried
+{
+	padding: $padding-default;
+
+	#form
+	{
+		margin-bottom: $margin-default;
+	}
+
+	.notice
+	{
+		font-size: 16px;
+		font-weight: 600;
+		margin-top: $spacing-lead-tail-default;
+		margin-bottom: $spacing-lead-tail-default;
+		text-align: center;
+	}
+}
