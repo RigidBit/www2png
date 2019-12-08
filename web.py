@@ -80,10 +80,6 @@ def web_view(uuid):
 
 @app.route("/", methods=["GET"])
 def root():
-	# connection = db.connect()
-	# main_records = db.get_recent_main_records(connection, "twitter", int(os.getenv("RIGIDSHOT_RECENT_RECORD_COUNT")))
-	# data_records = map(lambda x: db.get_data_record(connection, x["data_table_id"]), main_records)
-	# data = conv.data_records_to_html_records(data_records)
 	dirs = conv.html_dirs()
 	form = v.CaptureForm()
 	return render_template("index.html", page_title="WWW2PNG - Webpage Screenshot Service with Blockchain Anchoring", dirs=dirs, form=form)
