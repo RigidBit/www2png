@@ -2,7 +2,7 @@
 
 .focus-container
 {
-	height: 500px;
+	height: 600px;
 	margin-bottom: $spacing-lead-tail-thin;
 	position: relative;
 
@@ -19,6 +19,16 @@
 			display: grid;
 			grid-template-columns: 1fr 1fr 1fr;
 			height: 100%;
+
+			@media screen and (max-width: #{map-get($breakpoints, "desktop")})
+			{
+				grid-template-columns: 1fr 1fr;
+			}
+
+			@media screen and (max-width: #{map-get($breakpoints, "tablet")})
+			{
+				grid-template-columns: 1fr;
+			}
 
 			.column-1,
 			.column-2,
@@ -40,12 +50,22 @@
 			{
 				background-image: url("../image/screenshots-column-2.jpg");
 				animation-name: bg-animation-2;
+
+				@media screen and (max-width: #{map-get($breakpoints, "tablet")})
+				{
+					display: none;
+				}
 			}
 
 			.column-3
 			{
 				background-image: url("../image/screenshots-column-3.jpg");
 				animation-name: bg-animation-3;
+
+				@media screen and (max-width: #{map-get($breakpoints, "desktop")})
+				{
+					display: none;
+				}
 			}
 
 			@keyframes bg-animation-1
@@ -103,7 +123,7 @@
 			color: white;
 			font-size: 16px;
 			margin: 0 auto 0 auto;
-			max-width: 600px;
+			max-width: 580px;
 			min-width: 300px;
 			padding: $padding-default;
 
