@@ -86,7 +86,8 @@ def web_image(uuid):
 		return render_template("404.html", page_title="WWW2PNG - Error 404: Not Found", data={"uuid": uuid}, dirs=dirs), 404
 	else:
 		filename = uuid+".png"
-		return send_from_directory(os.getenv("WWW2PNG_SCREENSHOT_DIR"), filename, mimetype=mimetypes.guess_type(filename)[0])
+		as_attachment = "download" in request.values and request.values["download"] == "true"
+		return send_from_directory(os.getenv("WWW2PNG_SCREENSHOT_DIR"), filename, mimetype=mimetypes.guess_type(filename)[0], as_attachment=as_attachment)
 
 @app.route("/web/proof/<uuid>", methods=["GET"])
 def web_proof(uuid):
