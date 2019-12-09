@@ -98,7 +98,26 @@ $(document).ready(function()
 			$link.text("Show Advanced");
 			$(".advanced").hide();
 		}
-	})
+	});
+
+	$("#url").on("blur", function(e)
+	{
+		const $urlField = $(e.currentTarget);
+		const value = $urlField.val();
+
+		if(value.length > 0 && value.toLowerCase().indexOf("http") !== 0)
+			$urlField.val("http://" + value);
+	});
+
+	$("#url").on("focus", function(e)
+	{
+		const $urlField = $(e.currentTarget);
+		const value = $urlField.val();
+
+		if(value.length === 0)
+			$urlField.val("http://");
+	});
+
 });
 </script>
 {% include "footer.html" %}
