@@ -39,6 +39,13 @@ $(document).ready(function()
 			location.reload();
 		}, 5000);
 	}
+	else if("{{data.status}}" === "available" && "{{data.proof_available}}" !== "True")
+	{
+		setTimeout(function()
+		{
+			location.reload();
+		}, 300000);
+	}
 });
 </script>
 {% include "footer.html" %}
