@@ -41,7 +41,6 @@
 	{
 		img.screenshot
 		{
-			// border: 1px solid $border-color-light;
 			display: block;
 			margin: 0 auto 0 auto;
 			max-height: 800px;
@@ -66,11 +65,20 @@
 		grid-column-gap: $margin-default;
 		grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
 
+		@media screen and (max-width: #{map-get($breakpoints, "tablet")})
+		{
+			grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		}
+
 		.detail
 		{
 			overflow: hidden;
 			padding: $padding-thin 0;
 			white-space: nowrap;
+		}
+
+		.value
+		{
 			text-overflow: ellipsis;
 		}
 	}
