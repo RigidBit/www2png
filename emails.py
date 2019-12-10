@@ -16,7 +16,7 @@ def send_api_request_email(smtp_receiver, challenge):
 	message["To"] = smtp_receiver
 
 	message_text = f"Your API Key is: {challenge}\n\n"
-	message_text += f"Please open the following URL to activate your API Key: https://www2png.com/api/activate/{challenge}\n\n"
+	message_text += f"Please open the following URL to activate your API Key: {os.getenv('WWW2PNG_BASE_URL')}/api/activate/{challenge}\n\n"
 	message_text += "Activating this key will deactivate any previous key associated with this e-mail address."
 
 	message.attach(MIMEText(message_text, "plain"))

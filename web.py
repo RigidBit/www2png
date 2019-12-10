@@ -10,7 +10,6 @@ import uuid as UUID
 
 import conversion as conv
 import database as db
-import emails as e
 import validation as v
 
 ##### ENTRY POINT #####
@@ -18,7 +17,6 @@ import validation as v
 load_dotenv()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
-queue = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_QUEUE"))
 
 ##### STATIC ROUTES #####
 
@@ -44,6 +42,7 @@ def privacy_policy():
 @app.route("/api/request", methods=["POST"])
 def web_api_key_request():
 	connection = db.connect()
+	actions = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_ACTIONS"))
 	form = v.ApiKeyForm()
 	if form.validate_on_submit():
 		challenge = str(UUID.uuid4())
@@ -51,7 +50,9 @@ def web_api_key_request():
 		data = {"email": email, "challenge": challenge}
 		db.create_unverified_user_record(connection, data)
 		connection.commit()
-		e.send_api_request_email(email, challenge)
+		data = {"email": email, "challenge": challenge}
+		payload = {"action": "send_api_request_email", "data": data}
+		actions.put(json.dumps(payload))
 		return render_template("web_api_key_requested.html", page_title="WWW2PNG - API Key Requested", data=data, dirs=conv.html_dirs())
 	else:
 		for key in form.errors:
@@ -84,6 +85,7 @@ def web_api_key_activate(api_key):
 @app.route("/web/buried", methods=["GET"])
 @app.route("/web/buried/<action>/<int:job_id>", methods=["GET"])
 def web_buried(action=None, job_id=None):
+	queue = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_QUEUE"))
 	try:
 		if action == "delete" and job_id is not None:
 			queue.delete(job_id)
@@ -101,6 +103,7 @@ def web_buried(action=None, job_id=None):
 @app.route("/web/capture", methods=["POST"])
 def web_capture():
 	connection = db.connect()
+	queue = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_QUEUE"))
 	form = v.CaptureForm()
 	if form.validate_on_submit():
 		uuid = str(UUID.uuid4())
