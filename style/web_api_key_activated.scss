@@ -1,0 +1,11 @@
+@import "./variables.scss";
+
+.main-content-container.web-api-key-activated
+{
+	h1
+	{
+		line-height: 1.6em;
+		margin: $spacing-lead-tail-thin auto;
+		text-align: center;
+	}
+}

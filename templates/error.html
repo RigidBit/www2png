@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% include "header.html" %}
+<div class="main-content-container error">
+	<div class="page-error">
+		<h1>ERROR</h1>
+		{{data.error}}
+	</div>
+</div>
+{% include "footer.html" %}
+{% endblock %}

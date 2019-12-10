@@ -28,75 +28,89 @@
 		</div>
 	</div>
 </div>
-<div class="main-content-container">
-	<div class="web-form-container">
-		<h1>Try it Now</h1>
-		<form method="POST" action="/web/capture">
-			<label for="url">
-				Enter the URL to Screenshot:
-				<input id="url" type="url" name="url" placeholder="https://website.com" required>
-			</label>
-			<label>
-				<a id="showAdvanced" href="#showAdvanced">Show Advanced</a>
-			</label>
-			<label for="resolution" class="advanced">
-				Resolution:
-				<select id="resolution" name="resolution">
-					<option value="1920x1080">1920x1080 (16:9 1080p)</option>
-					<option value="1366x768" selected>1366x768 (16:9 Desktop)</option>
-					<option value="1280x720">1280x720 (16:9 720p)</option>
-					<option value="1024x768">1024x768 (4:3 Desktop)</option>
-					<option value="800x600">800x600 (4:3 Desktop)</option>
-					<option value="1024x1366">1024x1366 iPad Pro</option>
-					<option value="768x1024">768x1024 (iPad 1/2/3/4/Air/Mini)</option>
-					<option value="414x896">414x896 (iPhone XS Max/XR)</option>
-					<option value="375x812">375x812 (iPhone X/XS)</option>
-					<option value="414x736">414x736 (iPhone 6/7/8 Plus)</option>
-					<option value="375x667">375x667 (iPhone 6/7/8)</option>
-					<option value="320x568">375x667 (iPhone 5)</option>
-				</select>
-			</label>
-			<label for="full_page" class="advanced">
-				Capture Full Page:
-				<select id="full_page" name="full_page">
-					<option value="false" selected>False</option>
-					<option value="true">True</option>
-				</select>
-			</label>
-			<label for="delay" class="advanced">
-				Capture Delay:
-				<select id="delay" name="delay">
-					<option value="0" selected>No Delay</option>
-					<option value="1">1 Second</option>
-					<option value="2">2 Seconds</option>
-					<option value="3">3 Seconds</option>
-					<option value="4">4 Seconds</option>
-					<option value="5">5 Seconds</option>
-				</select>
-			</label>
-			<button type="submit" class="button">Capture PNG</button>
-		</form>
+<div class="main-content-container index">
+	<div class="forms-container">
+		<div class="web-form-container">
+			<h1>Use in Browser</h1>
+			<form method="POST" action="/web/capture">
+				<label for="url">
+					Enter the URL to Screenshot:
+					<input id="url" type="url" name="url" placeholder="https://website.com" required>
+				</label>
+				<label for="resolution" class="option">
+					Resolution:
+					<select id="resolution" name="resolution">
+						<option value="1920x1080">1920x1080 (16:9 1080p)</option>
+						<option value="1366x768" selected>1366x768 (16:9 Desktop)</option>
+						<option value="1280x720">1280x720 (16:9 720p)</option>
+						<option value="1024x768">1024x768 (4:3 Desktop)</option>
+						<option value="800x600">800x600 (4:3 Desktop)</option>
+						<option value="1024x1366">1024x1366 iPad Pro</option>
+						<option value="768x1024">768x1024 (iPad 1/2/3/4/Air/Mini)</option>
+						<option value="414x896">414x896 (iPhone XS Max/XR)</option>
+						<option value="375x812">375x812 (iPhone X/XS)</option>
+						<option value="414x736">414x736 (iPhone 6/7/8 Plus)</option>
+						<option value="375x667">375x667 (iPhone 6/7/8)</option>
+						<option value="320x568">375x667 (iPhone 5)</option>
+					</select>
+				</label>
+				<label for="full_page" class="option">
+					Capture Full Page:
+					<select id="full_page" name="full_page">
+						<option value="false" selected>False</option>
+						<option value="true">True</option>
+					</select>
+				</label>
+				<label for="delay" class="option">
+					Capture Delay:
+					<select id="delay" name="delay">
+						<option value="0" selected>No Delay</option>
+						<option value="1">1 Second</option>
+						<option value="2">2 Seconds</option>
+						<option value="3">3 Seconds</option>
+						<option value="4">4 Seconds</option>
+						<option value="5">5 Seconds</option>
+					</select>
+				</label>
+				<div class="button-container">
+					<button id="showOptions">Show Options</button>
+					<button type="submit">Capture PNG</button>
+				</div>
+			</form>
+		</div>
+		<div class="api-form-container">
+			<h1>Get an API Key</h1>
+			<form method="POST" action="/api/request">
+				<label for="email">
+					E-mail API Key to:
+					<input id="email" type="email" name="email" placeholder="hello@world.com" required>
+				</label>
+				<div class="button-container">
+					<button type="submit">Send API Key</button>
+				</div>
+			</form>
+		</div>
 	</div>
 </div>
 <script>
 $(document).ready(function()
 {
-	$("#showAdvanced").click(function(e)
+	$("#showOptions").click(function(e)
 	{
 		e.preventDefault();
 
 		const $link = $(e.currentTarget);
 		const linkText = $link.text();
 
-		if(linkText == "Show Advanced")
+		if(linkText == "Show Options")
 		{
-			$link.text("Hide Advanced");
-			$(".advanced").show();
+			$link.text("Hide Options");
+			$(".web-form-container .option").show();
 		}
 		else
 		{
-			$link.text("Show Advanced");
-			$(".advanced").hide();
+			$link.text("Show Options");
+			$(".web-form-container .option").hide();
 		}
 	});
 

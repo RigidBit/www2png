@@ -80,6 +80,18 @@
 		.value
 		{
 			text-overflow: ellipsis;
+
+			button
+			{
+				text-overflow: none;
+			}
+		}
+
+		.download
+		{
+			margin-top: $margin-thick;
+			grid-column: 1 / span 2;
+			text-align: center;
 		}
 	}
 }

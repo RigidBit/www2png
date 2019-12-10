@@ -24,7 +24,8 @@
 			<div class="metric detail status">Status</div><div class="value detail status">{{data.status}}</div>
 			<div class="metric detail proof">Blockchain Proof</div><div class="value detail proof">{% if data.proof_available %} available {% else %} pending {% endif %}</div>
 			{% if data.proof_available or data.screenshot_available %}
-			<div class="metric detail download">Download</div><div class="value detail download">
+			<!-- <div class="metric detail download">Download</div> -->
+			<div class="value detail download">
 			{% if data.screenshot_available %}
 			<a class="proof button" href="/web/image/{{ data.uuid }}?download=true" target="_blank"><i class="fas fa-download icon"></i>Download Screenshot</a>
 			{% endif %}

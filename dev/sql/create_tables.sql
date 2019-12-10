@@ -31,7 +31,7 @@ CREATE TABLE "unverified_users"
 (
 	"id" serial NOT NULL,
 	"email" varchar(255) NOT NULL,
-	"challenge" char(64) NOT NULL,
+	"challenge" varchar(64) NOT NULL,
 	"timestamp" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	PRIMARY KEY (id)
 );

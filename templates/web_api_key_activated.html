@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% include "header.html" %}
+<div class="main-content-container web-api-key-activated">
+	<h1>Your API Key has been activated: {{data.api_key}}</h1>
+</div>
+{% include "footer.html" %}
+{% endblock %}

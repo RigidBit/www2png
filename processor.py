@@ -12,6 +12,7 @@ import screenshot as ss
 def log_message(message):
 	if os.getenv("WWW2PNG_VERBOSE") == "true":
 		print(message)
+		print("")
 
 ##### ENTRY POINT #####
 
@@ -37,6 +38,7 @@ while True:
 		# Update data record.
 		data = {"queued": "false", "block_id": block["id"]}
 		db.update_data_record_by_uuid(connection, payload["uuid"], data)
+		connection.commit()
 		log_message(f"Updated data record: {payload['uuid']}")
 
 		queue.delete(job)
@@ -45,5 +47,4 @@ while True:
 		log_message("Buried.")
 		raise e
 	finally:
-		log_message("")
 		sys.stdout.flush()
