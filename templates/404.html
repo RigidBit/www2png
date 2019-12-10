@@ -2,11 +2,9 @@
 
 {% block body %}
 {% include "header.html" %}
-<div class="main-content-container">
-	<div class="page-404">
-		<h1>404</h1>
-		ID not found: {{ data.uuid }}
-	</div>
+<div class="main-content-container page-404">
+	<h1>404</h1>
+	{{ data.error }}
 </div>
 {% include "footer.html" %}
 {% endblock %}

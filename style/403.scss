@@ -1,0 +1,14 @@
+@import "./variables.scss";
+
+.main-content-container.page-403
+{
+	height: 300px;
+	padding: $spacing-lead-tail-default 0 $spacing-lead-tail-default 0;
+	text-align: center;
+
+	h1
+	{
+		font-size: 100px;
+		margin: 0 0 50px 0;
+	}
+}
