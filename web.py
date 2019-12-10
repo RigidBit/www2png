@@ -39,8 +39,79 @@ def privacy_policy():
 
 ##### DYNAMIC API ROUTES #####
 
+@app.route("/api/capture/<api_key>", methods=["GET"])
+def api_capture(api_key):
+	connection = db.connect()
+	if not db.check_api_key_exists(connection, api_key):
+		return (json.dumps({"error": "Invalid API Key provided."}), 403)
+	queue = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_QUEUE"))
+	form = v.CaptureForm(request.values)
+	if form.validate():
+		uuid = str(UUID.uuid4())
+		settings = conv.screenshot_settings(request.values)
+		data = {"uuid": uuid, "url": settings["url"], "block_id": 0, "user_id": 1, "queued": "true", "pruned": "false", "flagged": "false", "removed": "false"}
+		db.create_data_record(connection, data)
+		connection.commit()
+		payload = {"uuid": uuid, "settings": settings}
+		queue.put(json.dumps(payload))
+		payload = {
+			"status_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/status/{api_key}/{uuid}""",
+			"image_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/image/{api_key}/{uuid}""",
+			"proof_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/proof/{api_key}/{uuid}""",
+			# "delete_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/delete/{api_key}/{uuid}""",
+		}
+		return (json.dumps(payload), 200)
+	else:
+		for key in form.errors:
+			raise ValueError(f"{key}: {form.errors[key][0]}")
+
+@app.route("/api/image/<api_key>/<uuid>", methods=["GET"])
+def api_image(api_key, uuid):
+	connection = db.connect()
+	if not db.check_api_key_exists(connection, api_key):
+		return (json.dumps({"error": "Invalid API Key provided."}), 403)
+	data = db.get_data_record_by_uuid(connection, uuid)
+	if data == None:
+		return (json.dumps({"error": "Request ID is not valid."}), 404)
+	elif data["queued"]:
+		return (json.dumps({"error": "Request ID is valid, but image is not yet available."}), 202)
+	elif data["removed"] or data["pruned"]:
+		return (json.dumps({"error": "Image not available."}), 410)
+	else:
+		filename = uuid+".png"
+		as_attachment = "download" in request.values and request.values["download"] == "true"
+		return send_from_directory(os.getenv("WWW2PNG_SCREENSHOT_DIR"), filename, mimetype=mimetypes.guess_type(filename)[0], as_attachment=as_attachment)
+
+@app.route("/api/proof/<api_key>/<uuid>", methods=["GET"])
+def api_proof(api_key, uuid):
+	connection = db.connect()
+	if not db.check_api_key_exists(connection, api_key):
+		return (json.dumps({"error": "Invalid API Key provided."}), 403)
+	data_record = db.get_data_record_by_uuid(connection, uuid)
+	if data_record != None:
+		proof_available = True if int((datetime.datetime.now() - data_record["timestamp"]).total_seconds()) > int(os.getenv("RIGIDBIT_PROOF_DELAY")) else False
+		if proof_available:
+			headers = {"api_key": os.getenv("RIGIDBIT_API_KEY")}
+			url = os.getenv("RIGIDBIT_BASE_URL") + "/api/trace-block/" + str(data_record["block_id"])
+			content = requests.get(url, headers=headers).content
+			return Response(content, mimetype="application/json", headers={"Content-disposition": f"attachment; filename={uuid}.json"})
+		else:
+			return (json.dumps({"error": "Request ID is valid, but proof is not yet available."}), 202)
+	return (json.dumps({"error": "Request ID is not valid."}), 404)
+
+@app.route("/api/status/<api_key>/<uuid>", methods=["GET"])
+def api_status(api_key, uuid):
+	connection = db.connect()
+	if not db.check_api_key_exists(connection, api_key):
+		return (json.dumps({"error": "Invalid API Key provided."}), 403)
+	if not db.check_data_uuid_exists(connection, uuid):
+		return (json.dumps({"error": "Invalid Request ID provided."}), 404)
+	data = db.get_data_record_by_uuid(connection, uuid)
+	payload = conv.data_record_to_api_status(data)
+	return (json.dumps(payload), 200)
+
 @app.route("/api/request", methods=["POST"])
-def web_api_key_request():
+def api_request():
 	connection = db.connect()
 	actions = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_ACTIONS"))
 	form = v.ApiKeyForm()
@@ -59,11 +130,10 @@ def web_api_key_request():
 			raise ValueError(f"{key}: {form.errors[key][0]}")
 
 @app.route("/api/activate/<api_key>", methods=["GET"])
-def web_api_key_activate(api_key):
+def api_activate(api_key):
 	connection = db.connect()
-	exists = db.check_unverified_user_challenge_exists(connection, api_key)
-	if exists:
-		record = db.get_unverified_user_record_by_challenge(connection, api_key)
+	record = db.get_unverified_user_record_by_challenge(connection, api_key)
+	if record != None:
 		db.delete_unverified_user_record(connection, record["id"])
 		email_exists = db.check_user_email_exists(connection, record["email"])
 		if email_exists:
@@ -122,8 +192,8 @@ def web_capture():
 def web_image(uuid):
 	connection = db.connect()
 	data = db.get_data_record_by_uuid(connection, uuid)
-	if data["removed"] or data["pruned"] or data["queued"]:
-		return render_template("404.html", page_title="WWW2PNG - Error 404: Not Found", data={"uuid": uuid}, dirs=conv.html_dirs()), 404
+	if data == None or data["removed"] or data["pruned"] or data["queued"]:
+		return render_template("404.html", page_title="WWW2PNG - Error 404: Not Found", data={"error": f"""Request ID not found: {uuid}"""}, dirs=conv.html_dirs()), 404
 	else:
 		filename = uuid+".png"
 		as_attachment = "download" in request.values and request.values["download"] == "true"
@@ -132,27 +202,25 @@ def web_image(uuid):
 @app.route("/web/proof/<uuid>", methods=["GET"])
 def web_proof(uuid):
 	connection = db.connect()
-	exists = db.check_data_uuid_exists(connection, uuid)
-	if exists:
-		data_record = db.get_data_record_by_uuid(connection, uuid)
+	data_record = db.get_data_record_by_uuid(connection, uuid)
+	if data_record != None:
 		proof_available = True if int((datetime.datetime.now() - data_record["timestamp"]).total_seconds()) > int(os.getenv("RIGIDBIT_PROOF_DELAY")) else False
 		if proof_available:
 			headers = {"api_key": os.getenv("RIGIDBIT_API_KEY")}
 			url = os.getenv("RIGIDBIT_BASE_URL") + "/api/trace-block/" + str(data_record["block_id"])
 			content = requests.get(url, headers=headers).content
 			return Response(content, mimetype="application/json", headers={"Content-disposition": f"attachment; filename={uuid}.json"})
-	return render_template("404.html", page_title="WWW2PNG - Error 404: Not Found", data={"uuid": uuid}, dirs=conv.html_dirs()), 404
+	return render_template("404.html", page_title="WWW2PNG - Error 404: Not Found", data={"error": f"""Request ID not found: {uuid}"""}, dirs=conv.html_dirs()), 404
 
 @app.route("/web/view/<uuid>", methods=["GET"])
 def web_view(uuid):
 	connection = db.connect()
-	exists = db.check_data_uuid_exists(connection, uuid)
-	if exists:
-		data = db.get_data_record_by_uuid(connection, uuid)
+	data = db.get_data_record_by_uuid(connection, uuid)
+	if data != None:
 		data = conv.data_record_to_web_view(data)
 		return render_template("web_view.html", page_title="WWW2PNG - Webpage Screenshot Service with Blockchain Anchoring", dirs=conv.html_dirs(), data=data)
 	else:
-		return render_template("404.html", page_title="WWW2PNG - Error 404: Not Found", data={"uuid": uuid}, dirs=conv.html_dirs()), 404
+		return render_template("404.html", page_title="WWW2PNG - Error 404: Not Found", data={"error": f"""Request ID not found: {uuid}"""}, dirs=conv.html_dirs()), 404
 
 @app.route("/", methods=["GET"])
 def root():

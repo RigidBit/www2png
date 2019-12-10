@@ -2,6 +2,18 @@ import datetime
 import json
 import os
 
+def data_record_to_api_status(data):
+	data_web_view = data_record_to_web_view(data)
+	data = {
+		"uuid": data["uuid"],
+		"url": data["url"],
+		"status": data_web_view["status"],
+		"screenshot_available": data_web_view["screenshot_available"],
+		"proof_available": data_web_view["proof_available"],
+		"timestamp": data["timestamp"],
+	}
+	return data
+
 def data_record_to_web_view(data):
 	if data["pruned"]:
 		data["status"] = "pruned"

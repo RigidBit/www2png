@@ -7,6 +7,11 @@ import time
 def connect():
 	return psycopg2.connect(dbname=os.getenv("POSTGRESQL_DB"), host=os.getenv("POSTGRESQL_HOST"), port=os.getenv("POSTGRESQL_PORT"), user=os.getenv("POSTGRESQL_USER"), password=os.getenv("POSTGRESQL_PASS"))
 
+def check_api_key_exists(connection, api_key):
+	cursor = connection.cursor()
+	cursor.execute("SELECT COUNT(*) FROM api_keys WHERE uuid=%s", (api_key,))
+	return cursor.fetchone()[0] >= 1
+
 def check_data_uuid_exists(connection, uuid):
 	cursor = connection.cursor()
 	cursor.execute("SELECT COUNT(*) FROM data WHERE uuid=%s", (uuid,))
@@ -69,22 +74,32 @@ def delete_unverified_user_record(connection, id):
 def get_data_record(connection, id):
 	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 	cursor.execute("SELECT * FROM data WHERE id=%s", (id,))
-	return dict(cursor.fetchone())
+	record = cursor.fetchone()
+	return dict(record) if record is not None else None
+
+def get_api_key_record_by_uuid(connection, uuid):
+	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+	cursor.execute("SELECT * FROM api_keys WHERE uuid=%s", (uuid,))
+	record = cursor.fetchone()
+	return dict(record) if record is not None else None
 
 def get_data_record_by_uuid(connection, uuid):
 	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 	cursor.execute("SELECT * FROM data WHERE uuid=%s", (uuid,))
-	return dict(cursor.fetchone())
+	record = cursor.fetchone()
+	return dict(record) if record is not None else None
 
 def get_unverified_user_record_by_challenge(connection, challenge):
 	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 	cursor.execute("SELECT * FROM unverified_users WHERE challenge=%s", (challenge,))
-	return dict(cursor.fetchone())
+	record = cursor.fetchone()
+	return dict(record) if record is not None else None
 
 def get_user_record_by_email(connection, email):
 	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 	cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
-	return dict(cursor.fetchone())
+	record = cursor.fetchone()
+	return dict(record) if record is not None else None
 
 def update_data_record(connection, id, data):
 	query = sql.SQL("UPDATE data SET {} WHERE id={};").format(sql.SQL(", ").join(map(lambda kv: sql.SQL("{}={}").format(sql.Identifier(kv[0]), sql.Literal(kv[1])), data.items())), sql.Literal(id))
