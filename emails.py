@@ -11,7 +11,7 @@ def send_api_request_email(smtp_receiver, challenge):
 	smtp_pass = os.getenv("SMTP_PASS")
 
 	message = MIMEMultipart("alternative")
-	message["Subject"] = "Your WWW2PNG API Key"
+	message["Subject"] = "Your API Key"
 	message["From"] = smtp_sender
 	message["To"] = smtp_receiver
 
