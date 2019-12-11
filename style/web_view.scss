@@ -91,7 +91,9 @@
 		{
 			margin-top: $margin-thick;
 			grid-column: 1 / span 2;
+			overflow: auto;
 			text-align: center;
+			white-space: normal;
 		}
 	}
 }

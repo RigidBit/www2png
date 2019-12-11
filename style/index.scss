@@ -6,6 +6,11 @@
 	margin-bottom: $spacing-lead-tail-thin;
 	position: relative;
 
+	@media screen and (max-width: #{map-get($breakpoints, "tablet")})
+	{
+		margin-bottom: $margin-default;
+	}
+
 	.artwork
 	{
 		height: 100%;
@@ -141,10 +146,21 @@
 	display: grid;
 	grid-template-columns: 5fr 4fr;
 	grid-column-gap: $margin-default;
+	grid-row-gap: $margin-default;
 	justify-items: center;
 	margin: 0 auto $spacing-lead-tail-thin auto;
 	max-width: 800px;
 	width: 100%;
+
+	@media screen and (max-width: #{map-get($breakpoints, "desktop")})
+	{
+		grid-template-columns: 1fr;
+	}
+
+	@media screen and (max-width: #{map-get($breakpoints, "tablet")})
+	{
+		margin: 0 auto $margin-default auto;
+	}
 }
 
 .web-form-container,
@@ -154,6 +170,14 @@
 	border-radius: $border-radius-default;
 	display: block;
 	padding: $padding-thick;
+	max-width: 550px;
+	width: 100%;
+
+	@media screen and (max-width: #{map-get($breakpoints, "tablet")})
+	{
+		border-radius: 0;
+		max-width: none;		
+	}
 
 	h1
 	{
