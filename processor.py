@@ -25,6 +25,7 @@ while True:
 
 	try:
 		payload = json.loads(job.body)
+		log_message(f"Processing job: {job.body}")
 
 		# Generate screenshot
 		ss.generate_screenshot(payload["request_id"], payload["settings"])
