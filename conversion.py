@@ -49,3 +49,17 @@ def screenshot_settings(form_values):
 	settings["full_page"] = settings["full_page"] == "true" or settings["full_page"] == "True" or settings["full_page"] == "1" or settings["full_page"] == True
 
 	return settings
+
+def page_title(id):
+	switcher = {
+		"404": "Error 404: Not Found - WWW2PNG",
+		"api_activate": "API Key Activated - WWW2PNG",
+		"api_request": "API Key Requested - WWW2PNG",
+		"buried": "Manage Buried - WWW2PNG",
+		"contact": "Contact Us - WWW2PNG",
+		"default": "Free Webpage Screenshot Service API with Blockchain Anchoring - WWW2PNG",
+		"error": "Error - WWW2PNG",
+		"pp": "Privacy Policy - WWW2PNG",
+		"tos": "Terms of Service - WWW2PNG",
+	}
+	return switcher.get(id, "WWW2PNG")

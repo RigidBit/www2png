@@ -28,15 +28,15 @@ def ping():
 
 @app.route("/contact", methods=["GET"])
 def contact():
-	return render_template("contact.html", page_title="WWW2PNG - Webpage Screenshot Service with Blockchain Anchoring", dirs=conv.html_dirs())
+	return render_template("contact.html", page_title=conv.page_title("contact"), dirs=conv.html_dirs())
 
 @app.route("/terms_of_service", methods=["GET"])
 def terms_of_service():
-	return render_template("terms_of_service.html", page_title="WWW2PNG - Terms of Service", dirs=conv.html_dirs())
+	return render_template("terms_of_service.html", page_title=conv.page_title("tos"), dirs=conv.html_dirs())
 
 @app.route("/privacy_policy", methods=["GET"])
 def privacy_policy():
-	return render_template("privacy_policy.html", page_title="WWW2PNG - Privacy Policy", dirs=conv.html_dirs())
+	return render_template("privacy_policy.html", page_title=conv.page_title("pp"), dirs=conv.html_dirs())
 
 ##### DYNAMIC API ROUTES #####
 
@@ -118,7 +118,7 @@ def api_request():
 		data = {"email": email, "challenge": challenge}
 		payload = {"action": "send_api_request_email", "data": data}
 		actions.put(json.dumps(payload))
-		return render_template("web_api_key_requested.html", page_title="WWW2PNG - API Key Requested", data=data, dirs=conv.html_dirs())
+		return render_template("web_api_key_requested.html", page_title=conv.page_title("api_request"), data=data, dirs=conv.html_dirs())
 	else:
 		for key in form.errors:
 			raise ValueError(f"{key}: {form.errors[key][0]}")
@@ -141,10 +141,10 @@ def api_activate(api_key):
 		db.create_api_key_record(connection, data)
 		connection.commit()
 		data = {"api_key": api_key}
-		return render_template("web_api_key_activated.html", page_title="WWW2PNG - API Key Activated", data=data, dirs=conv.html_dirs())
+		return render_template("web_api_key_activated.html", page_title=conv.page_title("api_activate"), data=data, dirs=conv.html_dirs())
 	else:
 		data = {"header": "ERROR", "error": "The API Key you specified is not valid or has already been activated."}
-		return render_template("error.html", page_title="WWW2PNG - ERROR", data=data, dirs=conv.html_dirs())
+		return render_template("error.html", page_title=conv.page_title("error"), data=data, dirs=conv.html_dirs())
 
 @app.route("/web/buried", methods=["GET"])
 @app.route("/web/buried/<action>/<int:job_id>", methods=["GET"])
@@ -162,7 +162,7 @@ def web_buried(action=None, job_id=None):
 		data = {"job_body": job.body, "job_id": job.id}
 	except greenstalk.NotFoundError:
 		data = {}
-	return render_template("buried.html", page_title="WWW2PNG - Manage Buried", data=data, dirs=conv.html_dirs())
+	return render_template("buried.html", page_title=conv.page_title("buried"), data=data, dirs=conv.html_dirs())
 
 @app.route("/web/capture", methods=["POST"])
 def web_capture():
@@ -187,7 +187,7 @@ def web_image(request_id):
 	connection = db.connect()
 	data = db.get_data_record_by_request_id(connection, request_id)
 	if data == None or data["removed"] or data["pruned"] or data["queued"]:
-		return render_template("error.html", page_title="WWW2PNG - Error 404: Not Found", data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=conv.html_dirs()), 404
+		return render_template("error.html", page_title=conv.page_title("404"), data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=conv.html_dirs()), 404
 	else:
 		filename = request_id+".png"
 		as_attachment = "download" in request.values and request.values["download"] == "true"
@@ -204,7 +204,7 @@ def web_proof(request_id):
 			url = os.getenv("RIGIDBIT_BASE_URL") + "/api/trace-block/" + str(data_record["block_id"])
 			content = requests.get(url, headers=headers).content
 			return Response(content, mimetype="application/json", headers={"Content-disposition": f"attachment; filename={request_id}.json"})
-	return render_template("error.html", page_title="WWW2PNG - Error 404: Not Found", data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=conv.html_dirs()), 404
+	return render_template("error.html", page_title=conv.page_title("404"), data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=conv.html_dirs()), 404
 
 @app.route("/web/view/<request_id>", methods=["GET"])
 def web_view(request_id):
@@ -214,12 +214,12 @@ def web_view(request_id):
 		data = conv.data_record_to_web_view(data)
 		return render_template("web_view.html", page_title="WWW2PNG - Webpage Screenshot Service with Blockchain Anchoring", dirs=conv.html_dirs(), data=data)
 	else:
-		return render_template("error.html", page_title="WWW2PNG - Error 404: Not Found", data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=conv.html_dirs()), 404
+		return render_template("error.html", page_title=conv.page_title("404"), data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=conv.html_dirs()), 404
 
 @app.route("/", methods=["GET"])
 def root():
 	form = v.CaptureForm()
-	return render_template("index.html", page_title="WWW2PNG - Webpage Screenshot Service with Blockchain Anchoring", dirs=conv.html_dirs(), form=form)
+	return render_template("index.html", page_title=conv.page_title("default"), dirs=conv.html_dirs(), form=form)
 
 if __name__ == "__main__":
 	app.run(host="0.0.0.0")
