@@ -54,6 +54,7 @@ def page_title(id):
 	switcher = {
 		"404": "Error 404: Not Found - WWW2PNG",
 		"api_activate": "API Key Activated - WWW2PNG",
+		"api_help": "API Help - WWW2PNG",
 		"api_request": "API Key Requested - WWW2PNG",
 		"buried": "Manage Buried - WWW2PNG",
 		"contact": "Contact Us - WWW2PNG",
