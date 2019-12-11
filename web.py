@@ -8,6 +8,7 @@ import mimetypes
 import os
 import requests
 
+from decorators import api_key_required, api_key_and_request_id_required
 import conversion as conv
 import database as db
 import validation as v
@@ -40,10 +41,9 @@ def privacy_policy():
 ##### DYNAMIC API ROUTES #####
 
 @app.route("/api/capture/<api_key>", methods=["GET"])
+@api_key_required
 def api_capture(api_key):
 	connection = db.connect()
-	if not db.check_api_key_exists(connection, api_key):
-		return (json.dumps({"error": "Invalid API Key provided."}), 403)
 	queue = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_QUEUE"))
 	form = v.CaptureForm(request.values)
 	if form.validate():
@@ -65,14 +65,11 @@ def api_capture(api_key):
 			raise ValueError(f"{key}: {form.errors[key][0]}")
 
 @app.route("/api/image/<api_key>/<request_id>", methods=["GET"])
+@api_key_and_request_id_required
 def api_image(api_key, request_id):
 	connection = db.connect()
-	if not db.check_api_key_exists(connection, api_key):
-		return (json.dumps({"error": "Invalid API Key provided."}), 403)
 	data = db.get_data_record_by_request_id(connection, request_id)
-	if data == None:
-		return (json.dumps({"error": "Request ID is not valid."}), 404)
-	elif data["queued"]:
+	if data["queued"]:
 		return (json.dumps({"error": "Request ID is valid, but image is not yet available."}), 202)
 	elif data["removed"] or data["pruned"]:
 		return (json.dumps({"error": "Image not available."}), 410)
@@ -82,23 +79,21 @@ def api_image(api_key, request_id):
 		return send_from_directory(os.getenv("WWW2PNG_SCREENSHOT_DIR"), filename, mimetype=mimetypes.guess_type(filename)[0], as_attachment=as_attachment)
 
 @app.route("/api/proof/<api_key>/<request_id>", methods=["GET"])
+@api_key_and_request_id_required
 def api_proof(api_key, request_id):
 	connection = db.connect()
-	if not db.check_api_key_exists(connection, api_key):
-		return (json.dumps({"error": "Invalid API Key provided."}), 403)
 	data_record = db.get_data_record_by_request_id(connection, request_id)
-	if data_record != None:
-		proof_available = True if int((datetime.datetime.now() - data_record["timestamp"]).total_seconds()) > int(os.getenv("RIGIDBIT_PROOF_DELAY")) else False
-		if proof_available:
-			headers = {"api_key": os.getenv("RIGIDBIT_API_KEY")}
-			url = os.getenv("RIGIDBIT_BASE_URL") + "/api/trace-block/" + str(data_record["block_id"])
-			content = requests.get(url, headers=headers).content
-			return Response(content, mimetype="application/json", headers={"Content-disposition": f"attachment; filename={request_id}.json"})
-		else:
-			return (json.dumps({"error": "Request ID is valid, but proof is not yet available."}), 202)
-	return (json.dumps({"error": "Request ID is not valid."}), 404)
+	proof_available = True if int((datetime.datetime.now() - data_record["timestamp"]).total_seconds()) > int(os.getenv("RIGIDBIT_PROOF_DELAY")) else False
+	if proof_available:
+		headers = {"api_key": os.getenv("RIGIDBIT_API_KEY")}
+		url = os.getenv("RIGIDBIT_BASE_URL") + "/api/trace-block/" + str(data_record["block_id"])
+		content = requests.get(url, headers=headers).content
+		return Response(content, mimetype="application/json", headers={"Content-disposition": f"attachment; filename={request_id}.json"})
+	else:
+		return (json.dumps({"error": "Request ID is valid, but proof is not yet available."}), 202)
 
 @app.route("/api/status/<api_key>/<request_id>", methods=["GET"])
+@api_key_and_request_id_required
 def api_status(api_key, request_id):
 	connection = db.connect()
 	if not db.check_api_key_exists(connection, api_key):
@@ -134,9 +129,9 @@ def api_activate(api_key):
 	record = db.get_unverified_user_record_by_challenge(connection, api_key)
 	if record != None:
 		db.delete_unverified_user_record(connection, record["id"])
-		email_exists = db.check_user_email_exists(connection, record["email"])
-		if email_exists:
-			user_id = db.get_user_record_by_email(connection, record["email"])["id"]
+		user_record = db.get_user_record_by_email(connection, record["email"])
+		if user_record != None:
+			user_id = user_record["id"]
 		else:
 			data = {"email": record["email"], "disabled": False}
 			user_id = db.create_user_record(connection, data)
@@ -148,7 +143,7 @@ def api_activate(api_key):
 		data = {"api_key": api_key}
 		return render_template("web_api_key_activated.html", page_title="WWW2PNG - API Key Activated", data=data, dirs=conv.html_dirs())
 	else:
-		data = {"error": "The API Key you specified is not valid or has already been activated."}
+		data = {"header": "ERROR", "error": "The API Key you specified is not valid or has already been activated."}
 		return render_template("error.html", page_title="WWW2PNG - ERROR", data=data, dirs=conv.html_dirs())
 
 @app.route("/web/buried", methods=["GET"])
