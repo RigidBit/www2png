@@ -43,7 +43,9 @@ def screenshot_settings(form_values):
 
 	settings["delay"] = min(int(settings["delay"]), settings["maxDelay"])
 	settings["height"] = min(list(map(int, settings["resolution"].split("x")))[1], list(map(int, settings["maxResolution"].split("x")))[1])
+	settings["height"] = max(settings["height"], list(map(int, settings["minResolution"].split("x")))[1])
 	settings["width"] = min(list(map(int, settings["resolution"].split("x")))[0], list(map(int, settings["maxResolution"].split("x")))[0])
+	settings["width"] = max(settings["width"], list(map(int, settings["minResolution"].split("x")))[0])
 	settings["maxHeight"] = list(map(int, settings["maxResolution"].split("x")))[1]
 	settings["maxWidth"] = list(map(int, settings["maxResolution"].split("x")))[0]
 	settings["full_page"] = settings["full_page"] == "true" or settings["full_page"] == "True" or settings["full_page"] == "1" or settings["full_page"] == True
