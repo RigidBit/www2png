@@ -4,12 +4,12 @@ import os
 import requests
 import time
 
-def determine_screenshot_filename(uuid):
-	return os.getenv("WWW2PNG_SCREENSHOT_DIR") + "/" + str(uuid) + ".png"
+def determine_screenshot_filename(request_id):
+	return os.getenv("WWW2PNG_SCREENSHOT_DIR") + "/" + str(request_id) + ".png"
 
-def generate_screenshot(uuid, settings):
+def generate_screenshot(request_id, settings):
 	url = settings["url"]
-	screenshot_filename = determine_screenshot_filename(uuid)
+	screenshot_filename = determine_screenshot_filename(request_id)
 	window_x = settings["width"]
 	window_y = settings["height"]
 
