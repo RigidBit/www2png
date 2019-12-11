@@ -27,8 +27,8 @@ while True:
 		payload = json.loads(job.body)
 
 		# Generate screenshot
-		ss.generate_screenshot(payload["uuid"], payload["settings"])
-		filename_screenshot = ss.determine_screenshot_filename(payload["uuid"])
+		ss.generate_screenshot(payload["request_id"], payload["settings"])
+		filename_screenshot = ss.determine_screenshot_filename(payload["request_id"])
 		log_message(f"Generated screenshot: {filename_screenshot}")
 
 		# Generate blocks.
@@ -37,9 +37,9 @@ while True:
 
 		# Update data record.
 		data = {"queued": "false", "block_id": block["id"]}
-		db.update_data_record_by_uuid(connection, payload["uuid"], data)
+		db.update_data_record_by_request_id(connection, payload["request_id"], data)
 		connection.commit()
-		log_message(f"Updated data record: {payload['uuid']}")
+		log_message(f"Updated data record: {payload['request_id']}")
 
 		queue.delete(job)
 	except Exception as e:

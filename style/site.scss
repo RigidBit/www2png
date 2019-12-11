@@ -3,9 +3,6 @@
 @import "./variables.scss"; // Must be imported first.
 @import "./mixins.scss"; // Must be imported after variables.
 
-@import "./403.scss";
-@import "./404.scss";
-@import "./500.scss";
 @import "./base.scss";
 @import "./buried.scss";
 @import "./error.scss";

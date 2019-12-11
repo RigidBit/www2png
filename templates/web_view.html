@@ -7,7 +7,7 @@
 		<h2>Screenshot</h2>
 		<div class="screenshot-container">
 			{% if data.screenshot_available %}
-				<a href="/web/image/{{data.uuid}}" target="_blank"><img class="screenshot" src="/web/image/{{data.uuid}}" alt="Screenshot {{data.uuid}}"></a>
+				<a href="/web/image/{{data.request_id}}" target="_blank"><img class="screenshot" src="/web/image/{{data.request_id}}" alt="Screenshot {{data.request_id}}"></a>
 			{% elif data.queued %}
 				<img class="screenshot pending" src="/{{dirs.image_dir}}/pending.svg" alt="Screenshot Pending">
 			{% else %}
@@ -18,7 +18,7 @@
 	<div class="details">
 		<h2>Details</h2>
 		<div class="details-container">
-			<div class="metric detail id">ID</div><div class="value detail id"><a href="/web/view/{{data.uuid}}">{{data.uuid}}</a></div>
+			<div class="metric detail request_id">Request ID</div><div class="value detail request_id"><a href="/web/view/{{data.request_id}}">{{data.request_id}}</a></div>
 			<div class="metric detail url">URL</div><div class="value detail url"><a href="{{data.url}}" target="_blank">{{data.url}}</a></div>
 			<div class="metric detail timestamp">Timestamp</div><div class="value detail timestamp"><script>const date = new Date({{data.timestamp}} * 1000);document.write(date.toLocaleString());</script></div>
 			<div class="metric detail status">Status</div><div class="value detail status">{{data.status}}</div>
@@ -27,10 +27,10 @@
 			<!-- <div class="metric detail download">Download</div> -->
 			<div class="value detail download">
 			{% if data.screenshot_available %}
-			<a class="proof button" href="/web/image/{{ data.uuid }}?download=true" target="_blank"><i class="fas fa-download icon"></i>Download Screenshot</a>
+			<a class="proof button" href="/web/image/{{ data.request_id }}?download=true" target="_blank"><i class="fas fa-download icon"></i>Download Screenshot</a>
 			{% endif %}
 			{% if data.proof_available %}
-			<a class="proof button" href="/web/proof/{{ data.uuid }}" target="_blank"><i class="fas fa-download icon"></i>Download Proof</a>
+			<a class="proof button" href="/web/proof/{{ data.request_id }}" target="_blank"><i class="fas fa-download icon"></i>Download Proof</a>
 			{% endif %}
 			</div>
 			{% endif %}

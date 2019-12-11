@@ -1,12 +1,12 @@
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify, render_template, send_from_directory, Response, redirect
+from uuid import uuid4
 import datetime
 import greenstalk
 import json
 import mimetypes
 import os
 import requests
-import uuid as UUID
 
 import conversion as conv
 import database as db
@@ -47,30 +47,29 @@ def api_capture(api_key):
 	queue = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_QUEUE"))
 	form = v.CaptureForm(request.values)
 	if form.validate():
-		uuid = str(UUID.uuid4())
+		request_id = str(uuid4())
 		settings = conv.screenshot_settings(request.values)
-		data = {"uuid": uuid, "url": settings["url"], "block_id": 0, "user_id": 1, "queued": "true", "pruned": "false", "flagged": "false", "removed": "false"}
+		data = {"request_id": request_id, "url": settings["url"], "block_id": 0, "user_id": 1, "queued": "true", "pruned": "false", "flagged": "false", "removed": "false"}
 		db.create_data_record(connection, data)
 		connection.commit()
-		payload = {"uuid": uuid, "settings": settings}
+		payload = {"request_id": request_id, "settings": settings}
 		queue.put(json.dumps(payload))
 		payload = {
-			"status_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/status/{api_key}/{uuid}""",
-			"image_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/image/{api_key}/{uuid}""",
-			"proof_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/proof/{api_key}/{uuid}""",
-			# "delete_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/delete/{api_key}/{uuid}""",
+			"status_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/status/{api_key}/{request_id}""",
+			"image_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/image/{api_key}/{request_id}""",
+			"proof_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/proof/{api_key}/{request_id}""",
 		}
 		return (json.dumps(payload), 200)
 	else:
 		for key in form.errors:
 			raise ValueError(f"{key}: {form.errors[key][0]}")
 
-@app.route("/api/image/<api_key>/<uuid>", methods=["GET"])
-def api_image(api_key, uuid):
+@app.route("/api/image/<api_key>/<request_id>", methods=["GET"])
+def api_image(api_key, request_id):
 	connection = db.connect()
 	if not db.check_api_key_exists(connection, api_key):
 		return (json.dumps({"error": "Invalid API Key provided."}), 403)
-	data = db.get_data_record_by_uuid(connection, uuid)
+	data = db.get_data_record_by_request_id(connection, request_id)
 	if data == None:
 		return (json.dumps({"error": "Request ID is not valid."}), 404)
 	elif data["queued"]:
@@ -78,35 +77,35 @@ def api_image(api_key, uuid):
 	elif data["removed"] or data["pruned"]:
 		return (json.dumps({"error": "Image not available."}), 410)
 	else:
-		filename = uuid+".png"
+		filename = request_id+".png"
 		as_attachment = "download" in request.values and request.values["download"] == "true"
 		return send_from_directory(os.getenv("WWW2PNG_SCREENSHOT_DIR"), filename, mimetype=mimetypes.guess_type(filename)[0], as_attachment=as_attachment)
 
-@app.route("/api/proof/<api_key>/<uuid>", methods=["GET"])
-def api_proof(api_key, uuid):
+@app.route("/api/proof/<api_key>/<request_id>", methods=["GET"])
+def api_proof(api_key, request_id):
 	connection = db.connect()
 	if not db.check_api_key_exists(connection, api_key):
 		return (json.dumps({"error": "Invalid API Key provided."}), 403)
-	data_record = db.get_data_record_by_uuid(connection, uuid)
+	data_record = db.get_data_record_by_request_id(connection, request_id)
 	if data_record != None:
 		proof_available = True if int((datetime.datetime.now() - data_record["timestamp"]).total_seconds()) > int(os.getenv("RIGIDBIT_PROOF_DELAY")) else False
 		if proof_available:
 			headers = {"api_key": os.getenv("RIGIDBIT_API_KEY")}
 			url = os.getenv("RIGIDBIT_BASE_URL") + "/api/trace-block/" + str(data_record["block_id"])
 			content = requests.get(url, headers=headers).content
-			return Response(content, mimetype="application/json", headers={"Content-disposition": f"attachment; filename={uuid}.json"})
+			return Response(content, mimetype="application/json", headers={"Content-disposition": f"attachment; filename={request_id}.json"})
 		else:
 			return (json.dumps({"error": "Request ID is valid, but proof is not yet available."}), 202)
 	return (json.dumps({"error": "Request ID is not valid."}), 404)
 
-@app.route("/api/status/<api_key>/<uuid>", methods=["GET"])
-def api_status(api_key, uuid):
+@app.route("/api/status/<api_key>/<request_id>", methods=["GET"])
+def api_status(api_key, request_id):
 	connection = db.connect()
 	if not db.check_api_key_exists(connection, api_key):
 		return (json.dumps({"error": "Invalid API Key provided."}), 403)
-	if not db.check_data_uuid_exists(connection, uuid):
+	data = db.get_data_record_by_request_id(connection, request_id)
+	if data == None:
 		return (json.dumps({"error": "Invalid Request ID provided."}), 404)
-	data = db.get_data_record_by_uuid(connection, uuid)
 	payload = conv.data_record_to_api_status(data)
 	return (json.dumps(payload), 200)
 
@@ -116,7 +115,7 @@ def api_request():
 	actions = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_ACTIONS"))
 	form = v.ApiKeyForm()
 	if form.validate_on_submit():
-		challenge = str(UUID.uuid4())
+		challenge = str(uuid4())
 		email = request.values["email"]
 		data = {"email": email, "challenge": challenge}
 		db.create_unverified_user_record(connection, data)
@@ -143,7 +142,7 @@ def api_activate(api_key):
 			user_id = db.create_user_record(connection, data)
 		data = {"email": record["email"], "api_key": api_key}
 		db.delete_api_key_record_by_user_id(connection, user_id)
-		data = {"uuid": api_key, "user_id": user_id}
+		data = {"api_key": api_key, "user_id": user_id}
 		db.create_api_key_record(connection, data)
 		connection.commit()
 		data = {"api_key": api_key}
@@ -176,51 +175,51 @@ def web_capture():
 	queue = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_QUEUE"))
 	form = v.CaptureForm()
 	if form.validate_on_submit():
-		uuid = str(UUID.uuid4())
+		request_id = str(uuid4())
 		settings = conv.screenshot_settings(request.values)
-		data = {"uuid": uuid, "url": settings["url"], "block_id": 0, "user_id": 1, "queued": "true", "pruned": "false", "flagged": "false", "removed": "false"}
+		data = {"request_id": request_id, "url": settings["url"], "block_id": 0, "user_id": 1, "queued": "true", "pruned": "false", "flagged": "false", "removed": "false"}
 		db.create_data_record(connection, data)
 		connection.commit()
-		payload = {"uuid": uuid, "settings": settings}
+		payload = {"request_id": request_id, "settings": settings}
 		queue.put(json.dumps(payload))
-		return redirect("/web/view/"+uuid, code=303)
+		return redirect("/web/view/"+request_id, code=303)
 	else:
 		for key in form.errors:
 			raise ValueError(f"{key}: {form.errors[key][0]}")
 
-@app.route("/web/image/<uuid>", methods=["GET"])
-def web_image(uuid):
+@app.route("/web/image/<request_id>", methods=["GET"])
+def web_image(request_id):
 	connection = db.connect()
-	data = db.get_data_record_by_uuid(connection, uuid)
+	data = db.get_data_record_by_request_id(connection, request_id)
 	if data == None or data["removed"] or data["pruned"] or data["queued"]:
-		return render_template("404.html", page_title="WWW2PNG - Error 404: Not Found", data={"error": f"""Request ID not found: {uuid}"""}, dirs=conv.html_dirs()), 404
+		return render_template("error.html", page_title="WWW2PNG - Error 404: Not Found", data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=conv.html_dirs()), 404
 	else:
-		filename = uuid+".png"
+		filename = request_id+".png"
 		as_attachment = "download" in request.values and request.values["download"] == "true"
 		return send_from_directory(os.getenv("WWW2PNG_SCREENSHOT_DIR"), filename, mimetype=mimetypes.guess_type(filename)[0], as_attachment=as_attachment)
 
-@app.route("/web/proof/<uuid>", methods=["GET"])
-def web_proof(uuid):
+@app.route("/web/proof/<request_id>", methods=["GET"])
+def web_proof(request_id):
 	connection = db.connect()
-	data_record = db.get_data_record_by_uuid(connection, uuid)
+	data_record = db.get_data_record_by_request_id(connection, request_id)
 	if data_record != None:
 		proof_available = True if int((datetime.datetime.now() - data_record["timestamp"]).total_seconds()) > int(os.getenv("RIGIDBIT_PROOF_DELAY")) else False
 		if proof_available:
 			headers = {"api_key": os.getenv("RIGIDBIT_API_KEY")}
 			url = os.getenv("RIGIDBIT_BASE_URL") + "/api/trace-block/" + str(data_record["block_id"])
 			content = requests.get(url, headers=headers).content
-			return Response(content, mimetype="application/json", headers={"Content-disposition": f"attachment; filename={uuid}.json"})
-	return render_template("404.html", page_title="WWW2PNG - Error 404: Not Found", data={"error": f"""Request ID not found: {uuid}"""}, dirs=conv.html_dirs()), 404
+			return Response(content, mimetype="application/json", headers={"Content-disposition": f"attachment; filename={request_id}.json"})
+	return render_template("error.html", page_title="WWW2PNG - Error 404: Not Found", data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=conv.html_dirs()), 404
 
-@app.route("/web/view/<uuid>", methods=["GET"])
-def web_view(uuid):
+@app.route("/web/view/<request_id>", methods=["GET"])
+def web_view(request_id):
 	connection = db.connect()
-	data = db.get_data_record_by_uuid(connection, uuid)
+	data = db.get_data_record_by_request_id(connection, request_id)
 	if data != None:
 		data = conv.data_record_to_web_view(data)
 		return render_template("web_view.html", page_title="WWW2PNG - Webpage Screenshot Service with Blockchain Anchoring", dirs=conv.html_dirs(), data=data)
 	else:
-		return render_template("404.html", page_title="WWW2PNG - Error 404: Not Found", data={"error": f"""Request ID not found: {uuid}"""}, dirs=conv.html_dirs()), 404
+		return render_template("error.html", page_title="WWW2PNG - Error 404: Not Found", data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=conv.html_dirs()), 404
 
 @app.route("/", methods=["GET"])
 def root():

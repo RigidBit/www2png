@@ -5,7 +5,7 @@ import os
 def data_record_to_api_status(data):
 	data_web_view = data_record_to_web_view(data)
 	data = {
-		"uuid": data["uuid"],
+		"request_id": data["request_id"],
 		"url": data["url"],
 		"status": data_web_view["status"],
 		"screenshot_available": data_web_view["screenshot_available"],

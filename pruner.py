@@ -15,12 +15,15 @@ def log_message(message):
 def prune_expired_data_records(connection):
 	records = db.get_expired_data_records(connection, int(os.getenv("WWW2PNG_SCREENSHOT_PRUNE_DELAY")))
 	for record in records:
-		data = {"pruned": "true"}
-		db.update_data_record(connection, record["id"], data)
-		log_message(f'Pruned data record: {record["id"]}')
-		screenshot_filename = ss.determine_screenshot_filename(record["uuid"])
-		os.remove(screenshot_filename)
-		log_message(f'Deleted screenshot: {screenshot_filename}')
+		try:
+			data = {"pruned": "true"}
+			db.update_data_record(connection, record["id"], data)
+			log_message(f'Pruned data record: {record["id"]}')
+			screenshot_filename = ss.determine_screenshot_filename(record["request_id"])
+			os.remove(screenshot_filename)
+			log_message(f'Deleted screenshot: {screenshot_filename}')
+		except FileNotFoundError:
+			log_message(f'Failed to delete screenshot: {screenshot_filename}')
 
 def prune_expired_unverified_user_records(connection):
 	records = db.get_expired_unverified_user_records(connection, int(os.getenv("WWW2PNG_UNVERIFIED_USER_PRUNE_DELAY")))

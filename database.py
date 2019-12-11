@@ -9,22 +9,7 @@ def connect():
 
 def check_api_key_exists(connection, api_key):
 	cursor = connection.cursor()
-	cursor.execute("SELECT COUNT(*) FROM api_keys WHERE uuid=%s", (api_key,))
-	return cursor.fetchone()[0] >= 1
-
-def check_data_uuid_exists(connection, uuid):
-	cursor = connection.cursor()
-	cursor.execute("SELECT COUNT(*) FROM data WHERE uuid=%s", (uuid,))
-	return cursor.fetchone()[0] >= 1
-
-def check_unverified_user_challenge_exists(connection, challenge):
-	cursor = connection.cursor()
-	cursor.execute("SELECT COUNT(*) FROM unverified_users WHERE challenge=%s", (challenge,))
-	return cursor.fetchone()[0] >= 1
-
-def check_user_email_exists(connection, email):
-	cursor = connection.cursor()
-	cursor.execute("SELECT COUNT(*) FROM users WHERE email=%s", (email,))
+	cursor.execute("SELECT COUNT(*) FROM api_keys WHERE api_key=%s", (api_key,))
 	return cursor.fetchone()[0] >= 1
 
 def create_api_key_record(connection, data):
@@ -77,15 +62,15 @@ def get_data_record(connection, id):
 	record = cursor.fetchone()
 	return dict(record) if record is not None else None
 
-def get_api_key_record_by_uuid(connection, uuid):
+def get_api_key_record_by_api_key(connection, api_key):
 	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-	cursor.execute("SELECT * FROM api_keys WHERE uuid=%s", (uuid,))
+	cursor.execute("SELECT * FROM api_keys WHERE api_key=%s", (api_key,))
 	record = cursor.fetchone()
 	return dict(record) if record is not None else None
 
-def get_data_record_by_uuid(connection, uuid):
+def get_data_record_by_request_id(connection, request_id):
 	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-	cursor.execute("SELECT * FROM data WHERE uuid=%s", (uuid,))
+	cursor.execute("SELECT * FROM data WHERE request_id=%s", (request_id,))
 	record = cursor.fetchone()
 	return dict(record) if record is not None else None
 
@@ -107,11 +92,11 @@ def update_data_record(connection, id, data):
 	cursor.execute(query)
 	return id
 
-def update_data_record_by_uuid(connection, uuid, data):
-	query = sql.SQL("UPDATE data SET {} WHERE uuid={};").format(sql.SQL(", ").join(map(lambda kv: sql.SQL("{}={}").format(sql.Identifier(kv[0]), sql.Literal(kv[1])), data.items())), sql.Literal(uuid))
+def update_data_record_by_request_id(connection, request_id, data):
+	query = sql.SQL("UPDATE data SET {} WHERE request_id={};").format(sql.SQL(", ").join(map(lambda kv: sql.SQL("{}={}").format(sql.Identifier(kv[0]), sql.Literal(kv[1])), data.items())), sql.Literal(request_id))
 	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)	
 	cursor.execute(query)
-	return uuid
+	return request_id
 
 def get_expired_data_records(connection, delay):
 	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
