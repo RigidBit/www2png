@@ -28,7 +28,7 @@ while True:
 			email = payload["data"]["email"]
 			challenge = payload["data"]["challenge"]
 			e.send_api_request_email(email, challenge)
-			log_message(f"Send API Request E-mail to: {email}")
+			log_message(f"Send API Request Email to: {email}")
 		else:
 			raise Exception("Invalid payload action")
 

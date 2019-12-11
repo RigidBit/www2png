@@ -21,14 +21,20 @@ app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
 
 ##### STATIC ROUTES #####
 
-@app.route("/ping", methods=["GET"])
-def ping():
-	db.connect()
-	return "Pong!"
+@app.route("/api/help", methods=["GET"])
+def api_help():
+	data = {"base_url": os.getenv("WWW2PNG_BASE_URL")}
+	return render_template("api_help.html", page_title=conv.page_title("api_help"), dirs=conv.html_dirs(), data=data)
 
 @app.route("/contact", methods=["GET"])
 def contact():
 	return render_template("contact.html", page_title=conv.page_title("contact"), dirs=conv.html_dirs())
+
+@app.route("/ping", methods=["GET"])
+def ping():
+	connection = db.connect()
+	db.check_api_key_exists(connection, "")
+	return "Pong!"
 
 @app.route("/terms_of_service", methods=["GET"])
 def terms_of_service():
@@ -55,6 +61,7 @@ def api_capture(api_key):
 		payload = {"request_id": request_id, "settings": settings}
 		queue.put(json.dumps(payload))
 		payload = {
+			"request_id": request_id,
 			"status_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/status/{api_key}/{request_id}""",
 			"image_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/image/{api_key}/{request_id}""",
 			"proof_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/proof/{api_key}/{request_id}""",
@@ -140,7 +147,7 @@ def api_activate(api_key):
 		data = {"api_key": api_key, "user_id": user_id}
 		db.create_api_key_record(connection, data)
 		connection.commit()
-		data = {"api_key": api_key}
+		data = {"api_key": api_key, "base_url": os.getenv("WWW2PNG_BASE_URL")}
 		return render_template("web_api_key_activated.html", page_title=conv.page_title("api_activate"), data=data, dirs=conv.html_dirs())
 	else:
 		data = {"header": "ERROR", "error": "The API Key you specified is not valid or has already been activated."}
@@ -218,8 +225,7 @@ def web_view(request_id):
 
 @app.route("/", methods=["GET"])
 def root():
-	form = v.CaptureForm()
-	return render_template("index.html", page_title=conv.page_title("default"), dirs=conv.html_dirs(), form=form)
+	return render_template("index.html", page_title=conv.page_title("default"), dirs=conv.html_dirs())
 
 if __name__ == "__main__":
 	app.run(host="0.0.0.0")

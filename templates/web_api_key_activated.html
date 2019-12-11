@@ -3,7 +3,42 @@
 {% block body %}
 {% include "header.html" %}
 <div class="main-content-container web-api-key-activated">
-	<h1>Your API Key has been activated: {{data.api_key}}</h1>
+	<h1>API Key Activated</h1>
+	<p class="center">
+		Your API Key has been activated:<br>
+		{{data.api_key}}
+	</p>
+	<p>
+		You're all set!
+		Be sure to check out the <a href="/api/help">API Help</a> page.
+		Below are a few examples to get you started.
+	</p>
+	<p>
+		Get a screenshot of the Google homepage:
+		<code id="code1" class="clickable" data-clipboard-target="#code1">{{ data.base_url }}/api/capture/{{data.api_key}}?url=https%3A%2F%2Fgoogle.com</code>
+	</p>
+	<p>
+		Get a screenshot of the Bing homepage at a resolution of 800x600:
+		<code id="code2" class="clickable" data-clipboard-target="#code2">{{ data.base_url }}/api/capture/{{data.api_key}}?url=https%3A%2F%2Fbing.com&resolution=800x600</code>
+	</p>
+	<p>
+		Get a screenshot of a YouTube video after a 3 second delay:
+		<code id="code3" class="clickable" data-clipboard-target="#code3">{{ data.base_url }}/api/capture/{{data.api_key}}?url=https%3A%2F%2Fyoutu.be%2FLWGJA9i18Co%3Ft%3D179&delay=3</code>
+	</p>
+	<p>
+		Get a full page screenshot of the Wikipedia homepage:
+		<code id="code4" class="clickable" data-clipboard-target="#code4">{{ data.base_url }}/api/capture/{{data.api_key}}?url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FMain_Page&full_page=true</code>
+	</p>
 </div>
+<script>
+$("code").on("click", function(e)
+{
+	const clipboard = new ClipboardJS("code");
+	clipboard.on("success", function(e)
+	{
+		nativeToast({ message: "Text copied to clipboard!", position: "north", timeout: 3000 });
+	});
+});
+</script>
 {% include "footer.html" %}
 {% endblock %}

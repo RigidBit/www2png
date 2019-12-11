@@ -3,7 +3,17 @@
 {% block body %}
 {% include "header.html" %}
 <div class="main-content-container web-api-key-requested">
-	<h1>Your API Key has been sent to: {{data.email}}</h1>
+	<h1>API Key Sent</h1>
+	<p class="center">
+		Your API Key has been sent to: {{data.email}}
+	</p>
+	<p>
+		In most cases you should receive the email within just a few minutes, but please allow up to 30 minutes for it to arrive.
+		Make sure you check your spam folder!
+	</p>
+	<p class="envelope">
+		<i class="far fa-envelope"></i>
+	</p>
 </div>
 {% include "footer.html" %}
 {% endblock %}
