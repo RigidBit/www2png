@@ -11,6 +11,7 @@ def data_record_to_api_status(data):
 		"screenshot_available": data_web_view["screenshot_available"],
 		"proof_available": data_web_view["proof_available"],
 		"timestamp": data["timestamp"],
+		"prune_timestamp": data["timestamp"] + int(os.getenv("WWW2PNG_SCREENSHOT_PRUNE_DELAY"))
 	}
 	return data
 
@@ -26,6 +27,7 @@ def data_record_to_web_view(data):
 	data["screenshot_available"] = data["queued"] == False and data["removed"] == False and data["pruned"] == False
 	data["proof_available"] = True if int((datetime.datetime.now() - data["timestamp"]).total_seconds()) > int(os.getenv("RIGIDBIT_PROOF_DELAY")) else False
 	data["timestamp"] = int(data["timestamp"].timestamp())
+	data["prune_timestamp"] = data["timestamp"] + int(os.getenv("WWW2PNG_SCREENSHOT_PRUNE_DELAY"))
 	return data
 
 def html_dirs():

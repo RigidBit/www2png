@@ -21,6 +21,9 @@
 			<div class="metric detail request_id">Request ID</div><div class="value detail request_id"><a href="/web/view/{{data.request_id}}">{{data.request_id}}</a></div>
 			<div class="metric detail url">URL</div><div class="value detail url"><a href="{{data.url}}" target="_blank">{{data.url}}</a></div>
 			<div class="metric detail timestamp">Timestamp</div><div class="value detail timestamp"><script>const date = new Date({{data.timestamp}} * 1000);document.write(date.toLocaleString());</script></div>
+			{% if data.screenshot_available %}
+			<div class="metric detail prune_timestamp">Time Until Prune</div><div class="value detail prune_timestamp"></div>
+			{% endif %}
 			<div class="metric detail status">Status</div><div class="value detail status">{{data.status}}</div>
 			<div class="metric detail proof">Blockchain Proof</div><div class="value detail proof">{% if data.proof_available %} available {% else %} pending {% endif %}</div>
 			{% if data.proof_available or data.screenshot_available %}
@@ -38,8 +41,43 @@
 	</div>
 </div>
 <script>
+const $prune_timestamp_value = $(".value.detail.prune_timestamp");
+let prune_timer;
+
+function update_prune_time()
+{
+	const current_time = Date.now();
+	const prune_time = parseInt("{{data.prune_timestamp}}") * 1000;
+
+	if(current_time >= prune_time)
+	{
+		if(prune_timer)
+			clearInterval(prune_timer);
+		prune_timer = null;
+		setTimeout(function()
+		{
+			location.reload();
+		}, 10000);
+		$prune_timestamp_value.text("pending deletion");
+	}
+	else
+	{
+		const seconds = Math.round(Math.abs(prune_time-current_time)/1000);
+		const countdown = moment().startOf("day").seconds(seconds).format("HH:mm:ss");
+		$prune_timestamp_value.text(countdown);
+	}
+}
+
 $(document).ready(function()
 {
+	if("{{data.screenshot_available}}" === "True")
+	{
+		prune_timer = setInterval(function()
+		{
+			update_prune_time();
+		}, 1000);
+	}
+
 	if("{{data.status}}" === "pending")
 	{
 		setTimeout(function()
@@ -53,6 +91,13 @@ $(document).ready(function()
 		{
 			location.reload();
 		}, 300000);
+	}
+	else
+	{
+		setTimeout(function()
+		{
+			location.reload();
+		}, 3600000);
 	}
 });
 </script>
