@@ -26,16 +26,21 @@
 		padding: $padding-default;
 	}
 
+	.table-container
+	{
+		border: 1px solid $border-color-light;
+		overflow: auto;
+		margin: 0 auto 1rem auto;
+		max-width: 800px;
+		width: 100%;
+	}
+
 	table.endpoints,
 	table.parameters
 	{
-		border: 1px solid $border-color-light;
 		font-size: 13px;
-		margin: 0 auto 1rem auto;
-		max-width: 800px;
-		min-width: 500px;
 		padding: $padding-default;
-		width: 100%;
+		width: 798px;
 
 		th,
 		td

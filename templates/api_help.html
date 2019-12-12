@@ -5,33 +5,35 @@
 <div class="main-content-container api-help">
 	<h1>API Help</h1>
 	<h2>API Endpoints</h2>
-	<table class="endpoints">
-		<tr>
-			<th>Endpoint</th>
-			<th>Query Params</th>
-			<th>Description</th>
-		</tr>
-		<tr>
-			<td>/api/capture/&lt;api_key&gt;</td>
-			<td>url (required), resolution, full_page, delay</td>
-			<td>Initiate a new capture session. On successful submission, a request_id will be returned that is used with the other endpoints. All images are pruned after 24 hours.</td>
-		</tr>
-		<tr>
-			<td>/api/status/&lt;api_key&gt;/&lt;request_id&gt;</td>
-			<td>none</td>
-			<td>View the status of a request. This includes the screenshot_available and proof_available flags, which directly correspond to the availability of the image and proof endpoints.</td>
-		</tr>
-		<tr>
-			<td>/api/image/&lt;api_key&gt;/&lt;request_id&gt;</td>
-			<td>none</td>
-			<td>View the image for the request. This endpoint is usually available after a few seconds, but the status endpoint should be used for an accurate status. All images are pruned after 24 hours.</td>
-		</tr>
-		<tr>
-			<td>/api/proof/&lt;api_key&gt;/&lt;request_id&gt;</td>
-			<td>none</td>
-			<td>View the proof for the request. This endpoint is available an hour after the request has been processed. The status endpoint should be used for an accurate status. All proofs are currently retained indefinitely, but may be pruned at a later date.</td>
-		</tr>
-	</table>
+	<div class="table-container">
+		<table class="endpoints">
+			<tr>
+				<th>Endpoint</th>
+				<th>Query Params</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>/api/capture/&lt;api_key&gt;</td>
+				<td>url (required), resolution, full_page, delay</td>
+				<td>Initiate a new capture session. On successful submission, a request_id will be returned that is used with the other endpoints. All images are pruned after 24 hours.</td>
+			</tr>
+			<tr>
+				<td>/api/status/&lt;api_key&gt;/&lt;request_id&gt;</td>
+				<td>none</td>
+				<td>View the status of a request. This includes the screenshot_available and proof_available flags, which directly correspond to the availability of the image and proof endpoints.</td>
+			</tr>
+			<tr>
+				<td>/api/image/&lt;api_key&gt;/&lt;request_id&gt;</td>
+				<td>none</td>
+				<td>View the image for the request. This endpoint is usually available after a few seconds, but the status endpoint should be used for an accurate status. All images are pruned after 24 hours.</td>
+			</tr>
+			<tr>
+				<td>/api/proof/&lt;api_key&gt;/&lt;request_id&gt;</td>
+				<td>none</td>
+				<td>View the proof for the request. This endpoint is available an hour after the request has been processed. The status endpoint should be used for an accurate status. All proofs are currently retained indefinitely, but may be pruned at a later date.</td>
+			</tr>
+		</table>
+	</div>
 	<p>
 		The basic url format to generate a screenshot capture is:
 		<code id="code1" class="clickable" data-clipboard-target="#code1">{{data.base_url}}/api/capture/&lt;api_key&gt;?url=&lt;url&gt;</code>
@@ -41,38 +43,40 @@
 		<code id="code2" class="clickable" data-clipboard-target="#code2">{{data.base_url}}/api/capture/&lt;api_key&gt;?url=&lt;url&gt;&resolution=&lt;width&gt;x&lt;height&gt;&full_page=&lt;true|false&gt;&delay=&lt;seconds&gt;</code>
 	</p>
 	<h2>Capture Parameters</h2>
-	<table class="parameters">
-		<tr>
-			<th>Parameter</th>
-			<th>Required</th>
-			<th>Default</th>
-			<th>Description</th>
-		</tr>
-		<tr>
-			<td>url</td>
-			<td>yes</td>
-			<td></td>
-			<td>The URL of the website to screenshot. This value should be URL encoded.</td>
-		</tr>
-		<tr>
-			<td>resolution</td>
-			<td>no</td>
-			<td>1366x768</td>
-			<td>The resolution of the browser window used to screenshot in pixels. The default is 1366x768, which is the most common resolution and commonly found on laptops. The maximum resolution is 1920x10800.</td>
-		</tr>
-		<tr>
-			<td>full_page</td>
-			<td>no</td>
-			<td>false</td>
-			<td>Should the browser screenshot the entire page? If yes, the browser will attempt to capture the entire page contents, up to the maximum height of 10800 pixels. Note: Infinite scrolling pages will always be cut off. </td>
-		</tr>
-		<tr>
-			<td>delay</td>
-			<td>no</td>
-			<td>0</td>
-			<td>The number of seconds to wait, after the page has loaded, before taking the screenshot. This can help with certain pages that dynamically load content after the page structure has already loaded. The maximum value is 10 seconds.</td>
-		</tr>
-	</table>
+	<div class="table-container">
+		<table class="parameters">
+			<tr>
+				<th>Parameter</th>
+				<th>Required</th>
+				<th>Default</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>url</td>
+				<td>yes</td>
+				<td></td>
+				<td>The URL of the website to screenshot. This value should be URL encoded.</td>
+			</tr>
+			<tr>
+				<td>resolution</td>
+				<td>no</td>
+				<td>1366x768</td>
+				<td>The resolution of the browser window used to screenshot in pixels. The default is 1366x768, which is the most common resolution and commonly found on laptops. The maximum resolution is 1920x10800.</td>
+			</tr>
+			<tr>
+				<td>full_page</td>
+				<td>no</td>
+				<td>false</td>
+				<td>Should the browser screenshot the entire page? If yes, the browser will attempt to capture the entire page contents, up to the maximum height of 10800 pixels. Note: Infinite scrolling pages will always be cut off. </td>
+			</tr>
+			<tr>
+				<td>delay</td>
+				<td>no</td>
+				<td>0</td>
+				<td>The number of seconds to wait, after the page has loaded, before taking the screenshot. This can help with certain pages that dynamically load content after the page structure has already loaded. The maximum value is 10 seconds.</td>
+			</tr>
+		</table>
+	</div>
 </div>
 <script>
 $("code").on("click", function(e)
