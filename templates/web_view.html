@@ -20,7 +20,7 @@
 		<div class="details-container">
 			<div class="metric detail request_id">Request ID</div><div class="value detail request_id"><a href="/web/view/{{data.request_id}}">{{data.request_id}}</a></div>
 			<div class="metric detail url">URL</div><div class="value detail url"><a href="{{data.url}}" target="_blank">{{data.url}}</a></div>
-			<div class="metric detail timestamp">Timestamp</div><div class="value detail timestamp"><script>const date = new Date({{data.timestamp}} * 1000);document.write(date.toLocaleString());</script></div>
+			<div class="metric detail timestamp">Timestamp</div><div class="value detail timestamp"></div>
 			{% if data.screenshot_available %}
 			<div class="metric detail prune_timestamp">Time Until Prune</div><div class="value detail prune_timestamp"></div>
 			{% endif %}
@@ -30,15 +30,21 @@
 			<!-- <div class="metric detail download">Download</div> -->
 			<div class="value detail download">
 			{% if data.screenshot_available %}
-			<a class="proof button" href="/web/image/{{ data.request_id }}?download=true" target="_blank"><i class="fas fa-download icon"></i>Download Screenshot</a>
+				<a class="button" href="/web/image/{{ data.request_id }}?download=true" target="_blank"><i class="fas fa-download icon"></i>Download Screenshot</a>
 			{% endif %}
 			{% if data.proof_available %}
-			<a class="proof button" href="/web/proof/{{ data.request_id }}" target="_blank"><i class="fas fa-download icon"></i>Download Proof</a>
+				<a class="button" href="/web/proof/{{ data.request_id }}" target="_blank"><i class="fas fa-download icon"></i>Download Proof</a>
+			{% endif %}
+			{% if data.screenshot_available %}
+				<a class="imgur button" href="https://api.imgur.com/3/image" target="_blank"><i class="fas fa-upload icon"></i>Upload To Imgur</a>
 			{% endif %}
 			</div>
 			{% endif %}
 		</div>
 	</div>
+	<form id="imgur" action="https://api.imgur.com/3/image" method="POST">
+		<input type="hidden" name="image" value="">
+	</form>
 </div>
 <script>
 const $prune_timestamp_value = $(".value.detail.prune_timestamp");
@@ -68,14 +74,59 @@ function update_prune_time()
 	}
 }
 
+async function upload_to_imgur()
+{
+	const options =
+	{
+		method: "POST",
+		mode: "cors",
+		cache: "no-cache",
+		headers: {"Authorization": "Client-ID d33e6dfbb48e892"},
+		body: "{{data.base_url}}" + "/web/image/" + "{{data.request_id}}",
+	};
+
+	try
+	{
+		const response = await fetch("https://api.imgur.com/3/image", options);
+		const code = response.status;
+
+		if(code === 200)
+		{
+			const json = await response.json();
+			window.open(json.data.link, "_blank");
+		}
+		else
+			nativeToast({ message: "Imgur Upload Failed ☹️", position: "north", timeout: 3000 });
+	}
+	catch(e)
+	{
+		nativeToast({ message: "Imgur Upload Failed ☹️", position: "north", timeout: 3000 });
+	}
+}
+
+function populateTimestamp()
+{
+	const date = new Date(parseInt("{{data.timestamp}}") * 1000);
+	$(".value.detail.timestamp").text(date.toLocaleString());
+}
+
 $(document).ready(function()
 {
+	populateTimestamp();
+
+	$("a.imgur.button").on("click", function(e)
+	{
+		e.preventDefault();
+		upload_to_imgur();
+	});
+
 	if("{{data.screenshot_available}}" === "True")
 	{
 		prune_timer = setInterval(function()
 		{
 			update_prune_time();
 		}, 1000);
+		update_prune_time();
 	}
 
 	if("{{data.status}}" === "pending")

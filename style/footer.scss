@@ -6,11 +6,15 @@ footer
 	overflow: hidden;
 	position: relative;
 
-	.logo
+	div.logo
 	{
-		display: block;
 		margin: $margin-thick auto $margin-thick auto;
-		width: 200px;
+		text-align: center;
+		
+		img.logo
+		{
+			width: 200px;
+		}
 	}
 
 	.text

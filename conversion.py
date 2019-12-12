@@ -11,7 +11,7 @@ def data_record_to_api_status(data):
 		"screenshot_available": data_web_view["screenshot_available"],
 		"proof_available": data_web_view["proof_available"],
 		"timestamp": data["timestamp"],
-		"prune_timestamp": data["timestamp"] + int(os.getenv("WWW2PNG_SCREENSHOT_PRUNE_DELAY"))
+		"prune_timestamp": data["prune_timestamp"]
 	}
 	return data
 

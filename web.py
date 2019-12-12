@@ -219,6 +219,7 @@ def web_view(request_id):
 	data = db.get_data_record_by_request_id(connection, request_id)
 	if data != None:
 		data = conv.data_record_to_web_view(data)
+		data["base_url"] = os.getenv("WWW2PNG_BASE_URL")
 		return render_template("web_view.html", page_title="WWW2PNG - Webpage Screenshot Service with Blockchain Anchoring", dirs=conv.html_dirs(), data=data)
 	else:
 		return render_template("error.html", page_title=conv.page_title("404"), data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=conv.html_dirs()), 404
