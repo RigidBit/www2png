@@ -213,6 +213,12 @@ def web_proof(request_id):
 			return Response(content, mimetype="application/json", headers={"Content-disposition": f"attachment; filename={request_id}.json"})
 	return render_template("error.html", page_title=conv.page_title("404"), data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=conv.html_dirs()), 404
 
+@app.route("/web/stats", methods=["GET"])
+def web_stats():
+	connection = db.connect()
+	data = db.get_data_record_count(connection)
+	return render_template("error.html", page_title=conv.page_title("Count"), data={"header": "Stats", "error": "Count: " + str(data["count"])}, dirs=conv.html_dirs())
+
 @app.route("/web/view/<request_id>", methods=["GET"])
 def web_view(request_id):
 	connection = db.connect()
