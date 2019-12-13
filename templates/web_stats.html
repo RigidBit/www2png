@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% include "header.html" %}
+<div class="main-content-container stats">
+	<h1>Stats</h1>
+
+	<h2>Total Data Records</h2>
+	<p>
+		{{data.count}}
+	</p>
+
+	<h2>Recent Records</h2>
+	<div class="recent">
+		{% for item in data.recent %}
+		<div><a href="/web/view/{{item.request_id}}" target="_blank">{{item.request_id}}</a></div>
+		<div><a href="{{item.url}}" target="_blank">{{item.url}}</a></div>
+		<div>{{item.timestamp}}</div>
+		{% endfor %}
+	</div>
+</div>
+{% include "footer.html" %}
+{% endblock %}

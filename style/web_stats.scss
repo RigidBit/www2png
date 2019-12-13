@@ -1,0 +1,25 @@
+@import "./variables.scss";
+
+.main-content-container.stats
+{
+	padding: $spacing-lead-tail-default 0 $spacing-lead-tail-default 0;
+	text-align: center;
+
+	h1
+	{
+		font-size: 3rem;
+		margin: 0 0 50px 0;
+	}
+
+	.recent
+	{
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+
+		div
+		{
+			padding: $padding-thin;
+			// text-align: left;
+		}
+	}
+}

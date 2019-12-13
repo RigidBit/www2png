@@ -80,6 +80,11 @@ def get_data_record_count(connection):
 	record = cursor.fetchone()
 	return dict(record) if record is not None else None
 
+def get_recent_data_records(connection, count):
+	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+	cursor.execute("SELECT * FROM data ORDER BY id DESC LIMIT "+str(count))
+	return cursor.fetchall()
+
 def get_unverified_user_record_by_challenge(connection, challenge):
 	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 	cursor.execute("SELECT * FROM unverified_users WHERE challenge=%s", (challenge,))

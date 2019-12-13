@@ -216,8 +216,12 @@ def web_proof(request_id):
 @app.route("/web/stats", methods=["GET"])
 def web_stats():
 	connection = db.connect()
-	data = db.get_data_record_count(connection)
-	return render_template("error.html", page_title=conv.page_title("Count"), data={"header": "Stats", "error": "Count: " + str(data["count"])}, dirs=conv.html_dirs())
+	data = \
+	{
+		"count": db.get_data_record_count(connection)["count"],
+		"recent": db.get_recent_data_records(connection, 10)
+	}
+	return render_template("web_stats.html", page_title=conv.page_title("Count"), data=data, dirs=conv.html_dirs())
 
 @app.route("/web/view/<request_id>", methods=["GET"])
 def web_view(request_id):
