@@ -187,7 +187,7 @@ def web_capture():
 		return redirect("/web/view/"+request_id, code=303)
 	else:
 		for key in form.errors:
-			raise ValueError(f"{key}: {form.errors[key][0]}")
+			return render_template("error.html", page_title=conv.page_title("500"), data={"header": "Error", "error": f"""{key}: {form.errors[key][0]}"""}, dirs=conv.html_dirs()), 400
 
 @app.route("/web/image/<request_id>", methods=["GET"])
 def web_image(request_id):
