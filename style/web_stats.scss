@@ -19,7 +19,12 @@
 		div
 		{
 			padding: $padding-thin;
-			// text-align: left;
+			word-wrap: break-word;
+
+			a
+			{
+				white-space: normal;
+			}
 		}
 	}
 }

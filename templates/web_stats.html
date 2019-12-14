@@ -13,9 +13,9 @@
 	<h2>Recent Records</h2>
 	<div class="recent">
 		{% for item in data.recent %}
-		<div><a href="/web/view/{{item.request_id}}" target="_blank">{{item.request_id}}</a></div>
-		<div><a href="{{item.url}}" target="_blank">{{item.url}}</a></div>
-		<div>{{item.timestamp}}</div>
+		<div class="id"><a href="/web/view/{{item.request_id}}" target="_blank">{{item.request_id}}</a></div>
+		<div class="url"><a href="{{item.url}}" target="_blank">{{item.url}}</a></div class="url">
+		<div class="timestamp">{{item.timestamp}}</div>
 		{% endfor %}
 	</div>
 </div>
