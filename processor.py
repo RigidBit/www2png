@@ -43,9 +43,9 @@ while True:
 		log_message(f"Updated data record: {payload['request_id']}")
 
 		queue.delete(job)
-	except Exception as e:
-		queue.bury(job)
-		log_message("Buried.")
-		raise e
+	except:
+		queue.release(job)
+		log_message("released.")
+		raise
 	finally:
 		sys.stdout.flush()
