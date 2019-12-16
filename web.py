@@ -59,7 +59,7 @@ def api_capture(api_key):
 		db.create_data_record(connection, data)
 		connection.commit()
 		payload = {"request_id": request_id, "settings": settings}
-		queue.put(json.dumps(payload))
+		queue.put(json.dumps(payload), ttr=int(os.getenv("WWW2PNG_PROCESSING_TTR")))
 		payload = {
 			"request_id": request_id,
 			"status_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/status/{api_key}/{request_id}""",
@@ -124,7 +124,7 @@ def api_request():
 		connection.commit()
 		data = {"email": email, "challenge": challenge}
 		payload = {"action": "send_api_request_email", "data": data}
-		actions.put(json.dumps(payload))
+		actions.put(json.dumps(payload), ttr=int(os.getenv("WWW2PNG_PROCESSING_TTR")))
 		return render_template("web_api_key_requested.html", page_title=conv.page_title("api_request"), data=data, dirs=conv.html_dirs())
 	else:
 		for key in form.errors:
@@ -183,7 +183,7 @@ def web_capture():
 		db.create_data_record(connection, data)
 		connection.commit()
 		payload = {"request_id": request_id, "settings": settings}
-		queue.put(json.dumps(payload))
+		queue.put(json.dumps(payload), ttr=int(os.getenv("WWW2PNG_PROCESSING_TTR")))
 		return redirect("/web/view/"+request_id, code=303)
 	else:
 		for key in form.errors:
