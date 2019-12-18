@@ -5,10 +5,20 @@
 <div class="main-content-container stats">
 	<h1>Stats</h1>
 
-	<h2>Total Data Records</h2>
-	<p>
-		{{data.count}}
-	</p>
+	<div class="stats">
+		<div>
+			<h2>Total Data Records</h2>
+			{{data.count}}
+		</div>
+		<div>
+			<h2>Total API Keys</h2>
+			{{data.count_api_keys}}
+		</div>
+		<div>
+			<h2>Total Users</h2>
+			{{data.count_users}}
+		</div>
+	</div>
 
 	<h2>Recent Records</h2>
 	<div class="recent">

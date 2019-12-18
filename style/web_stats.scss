@@ -11,6 +11,13 @@
 		margin: 0 0 50px 0;
 	}
 
+	.stats
+	{
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		margin-bottom: 1rem;
+	}
+
 	.recent
 	{
 		display: grid;

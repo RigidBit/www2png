@@ -219,6 +219,8 @@ def web_stats():
 	data = \
 	{
 		"count": db.get_data_record_count(connection)["count"],
+		"count_api_keys": db.get_api_key_count(connection)["count"],
+		"count_users": db.get_user_count(connection)["count"],
 		"recent": db.get_recent_data_records(connection, 100)
 	}
 	return render_template("web_stats.html", page_title=conv.page_title("Count"), data=data, dirs=conv.html_dirs())

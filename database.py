@@ -62,6 +62,12 @@ def get_data_record(connection, id):
 	record = cursor.fetchone()
 	return dict(record) if record is not None else None
 
+def get_api_key_count(connection):
+	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+	cursor.execute("SELECT COUNT(*) as count FROM api_keys;")
+	record = cursor.fetchone()
+	return dict(record) if record is not None else None
+
 def get_api_key_record_by_api_key(connection, api_key):
 	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 	cursor.execute("SELECT * FROM api_keys WHERE api_key=%s", (api_key,))
@@ -88,6 +94,12 @@ def get_recent_data_records(connection, count):
 def get_unverified_user_record_by_challenge(connection, challenge):
 	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 	cursor.execute("SELECT * FROM unverified_users WHERE challenge=%s", (challenge,))
+	record = cursor.fetchone()
+	return dict(record) if record is not None else None
+
+def get_user_count(connection):
+	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+	cursor.execute("SELECT COUNT(*) as count FROM users;")
 	record = cursor.fetchone()
 	return dict(record) if record is not None else None
 
