@@ -20,6 +20,7 @@ CREATE TABLE "data"
 	"pruned" boolean NOT NULL,
 	"flagged" boolean NOT NULL,
 	"removed" boolean NOT NULL,
+	"failed" boolean NOT NULL,
 	"timestamp" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	PRIMARY KEY (id)
 );

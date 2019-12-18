@@ -16,15 +16,17 @@ def data_record_to_api_status(data):
 	return data
 
 def data_record_to_web_view(data):
-	if data["pruned"]:
-		data["status"] = "pruned"
+	if data["failed"]:
+		data["status"] = "failed"
 	elif data["removed"]:
 		data["status"] = "removed"
 	elif data["queued"]:
 		data["status"] = "pending"
+	elif data["pruned"]:
+		data["status"] = "pruned"
 	else:
 		data["status"] = "available"
-	data["screenshot_available"] = data["queued"] == False and data["removed"] == False and data["pruned"] == False
+	data["screenshot_available"] = data["status"] == "available"
 	data["proof_available"] = True if int((datetime.datetime.now() - data["timestamp"]).total_seconds()) > int(os.getenv("RIGIDBIT_PROOF_DELAY")) else False
 	data["timestamp"] = int(data["timestamp"].timestamp())
 	data["prune_timestamp"] = data["timestamp"] + int(os.getenv("WWW2PNG_SCREENSHOT_PRUNE_DELAY"))

@@ -44,8 +44,13 @@ def start_processing_thread():
 
 			queue.delete(job)
 		except:
-			queue.release(job)
-			log_message("Released.")
+			queue.bury(job)
+			log_message("Job buried.")
+			# Update data record.
+			data = {"failed": "true", "queued": "false"}
+			db.update_data_record_by_request_id(connection, payload["request_id"], data)
+			connection.commit()
+			log_message(f"Marking data record as failed: {payload['request_id']}")
 			raise
 		finally:
 			sys.stdout.flush()

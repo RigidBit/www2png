@@ -39,6 +39,8 @@
 
 	.screenshot .screenshot-container
 	{
+		color: #d6d6d6;
+
 		img.screenshot
 		{
 			display: block;
@@ -51,7 +53,8 @@
 				margin-top: 30px;
 			}
 
-			&.unavailable
+			&.unavailable,
+			&.failed
 			{
 				margin-top: 20px;
 				width: 100px;

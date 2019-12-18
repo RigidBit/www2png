@@ -55,7 +55,7 @@ def api_capture(api_key):
 	if form.validate():
 		request_id = str(uuid4())
 		settings = conv.screenshot_settings(request.values)
-		data = {"request_id": request_id, "url": settings["url"], "block_id": 0, "user_id": 1, "queued": "true", "pruned": "false", "flagged": "false", "removed": "false"}
+		data = {"request_id": request_id, "url": settings["url"], "block_id": 0, "user_id": 1, "queued": "true", "pruned": "false", "flagged": "false", "removed": "false", "failed": "false"}
 		db.create_data_record(connection, data)
 		connection.commit()
 		payload = {"request_id": request_id, "settings": settings}
@@ -179,7 +179,7 @@ def web_capture():
 	if form.validate_on_submit():
 		request_id = str(uuid4())
 		settings = conv.screenshot_settings(request.values)
-		data = {"request_id": request_id, "url": settings["url"], "block_id": 0, "user_id": 1, "queued": "true", "pruned": "false", "flagged": "false", "removed": "false"}
+		data = {"request_id": request_id, "url": settings["url"], "block_id": 0, "user_id": 1, "queued": "true", "pruned": "false", "flagged": "false", "removed": "false", "failed": "false"}
 		db.create_data_record(connection, data)
 		connection.commit()
 		payload = {"request_id": request_id, "settings": settings}
