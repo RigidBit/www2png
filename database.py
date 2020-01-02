@@ -81,7 +81,7 @@ def get_api_key_record_by_api_key(connection, api_key):
 
 def get_api_key_use_counts(connection):
 	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-	cursor.execute("SELECT api_key, email, use_count FROM api_keys LEFT JOIN users ON user_id=users.id ORDER BY use_count DESC LIMIT 50;")
+	cursor.execute("SELECT api_key, user_id, email, use_count FROM api_keys LEFT JOIN users ON user_id=users.id ORDER BY use_count DESC LIMIT 50;")
 	return cursor.fetchall()
 
 def get_data_record_by_request_id(connection, request_id):

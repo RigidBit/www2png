@@ -13,7 +13,7 @@
 
 	.stats
 	{
-		border: 1px solid $border-color-default;
+		// border: 1px solid $border-color-default;
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr;
 		margin: 0 auto $spacing-lead-tail-thin auto;
@@ -22,14 +22,14 @@
 
 	.api-keys-container
 	{
-		border: 1px solid $border-color-default;
+		// border: 1px solid $border-color-default;
 		margin: 0 auto $spacing-lead-tail-thin auto;
 		max-width: 1280px;
 
 		.api-keys
 		{
 			display: grid;
-			grid-template-columns: 1fr 1fr 1fr;
+			grid-template-columns: 1fr 1fr 1fr 1fr;
 	
 			div
 			{
@@ -41,14 +41,14 @@
 
 	.recent-container
 	{
-		border: 1px solid $border-color-default;
+		// border: 1px solid $border-color-default;
 		margin: 0 auto $spacing-lead-tail-thin auto;
 		max-width: 1280px;
 
 		.recent
 		{
 			display: grid;
-			grid-template-columns: 1fr 1fr 1fr;
+			grid-template-columns: 1fr 1fr 1fr 1fr;
 
 			div
 			{
