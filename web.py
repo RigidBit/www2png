@@ -55,7 +55,10 @@ def api_capture(api_key):
 	if form.validate():
 		request_id = str(uuid4())
 		settings = conv.screenshot_settings(request.values)
-		data = {"request_id": request_id, "url": settings["url"], "block_id": 0, "user_id": 1, "queued": "true", "pruned": "false", "flagged": "false", "removed": "false", "failed": "false"}
+		user_id = db.get_api_key_record_by_api_key(connection, api_key)["user_id"]
+		if db.check_pending_request(connection, settings["url"], user_id):
+			return json.dumps({"error": "A request for this exact URL is currently pending."}), 429
+		data = {"request_id": request_id, "url": settings["url"], "block_id": 0, "user_id": user_id, "queued": "true", "pruned": "false", "flagged": "false", "removed": "false", "failed": "false"}
 		db.create_data_record(connection, data)
 		connection.commit()
 		payload = {"request_id": request_id, "settings": settings}
@@ -69,7 +72,7 @@ def api_capture(api_key):
 		return (json.dumps(payload), 200)
 	else:
 		for key in form.errors:
-			raise ValueError(f"{key}: {form.errors[key][0]}")
+			return json.dumps({"error": form.errors[key][0]}), 400
 
 @app.route("/api/image/<api_key>/<request_id>", methods=["GET"])
 @api_key_and_request_id_required
@@ -97,7 +100,7 @@ def api_proof(api_key, request_id):
 		content = requests.get(url, headers=headers).content
 		return Response(content, mimetype="application/json", headers={"Content-disposition": f"attachment; filename={request_id}.json"})
 	else:
-		return (json.dumps({"error": "Request ID is valid, but proof is not yet available."}), 202)
+		return json.dumps({"error": "Request ID is valid, but proof is not yet available."}), 202
 
 @app.route("/api/status/<api_key>/<request_id>", methods=["GET"])
 @api_key_and_request_id_required
@@ -128,7 +131,7 @@ def api_request():
 		return render_template("web_api_key_requested.html", page_title=conv.page_title("api_request"), data=data, dirs=conv.html_dirs())
 	else:
 		for key in form.errors:
-			raise ValueError(f"{key}: {form.errors[key][0]}")
+			return json.dumps({"error": form.errors[key][0]}), 400
 
 @app.route("/api/activate/<api_key>", methods=["GET"])
 def api_activate(api_key):

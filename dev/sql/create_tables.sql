@@ -27,6 +27,7 @@ CREATE TABLE "data"
 
 CREATE INDEX "ix_data_request_id" ON "data" ("request_id");
 CREATE INDEX "ix_data_timestamp_pruned" ON "data" ("timestamp", "pruned");
+CREATE INDEX "ix_data_url_user_id_queued" ON "data" ("url", "user_id", "queued");
 
 CREATE TABLE "unverified_users"
 (

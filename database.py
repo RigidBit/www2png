@@ -12,6 +12,11 @@ def check_api_key_exists(connection, api_key):
 	cursor.execute("SELECT COUNT(*) FROM api_keys WHERE api_key=%s", (api_key,))
 	return cursor.fetchone()[0] >= 1
 
+def check_pending_request(connection, url, user_id):
+	cursor = connection.cursor()
+	cursor.execute("SELECT COUNT(*) FROM data WHERE url=%s AND user_id=%s AND queued=true", (url, user_id))
+	return cursor.fetchone()[0] >= 1
+
 def create_api_key_record(connection, data):
 	keys = list(data.keys())
 	values = list(map(str, data.values()))
