@@ -79,6 +79,11 @@ def get_api_key_record_by_api_key(connection, api_key):
 	record = cursor.fetchone()
 	return dict(record) if record is not None else None
 
+def get_api_key_use_counts(connection):
+	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+	cursor.execute("SELECT api_key, email, use_count FROM api_keys LEFT JOIN users ON user_id=users.id ORDER BY use_count DESC LIMIT 50;")
+	return cursor.fetchall()
+
 def get_data_record_by_request_id(connection, request_id):
 	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 	cursor.execute("SELECT * FROM data WHERE request_id=%s", (request_id,))
@@ -113,6 +118,12 @@ def get_user_record_by_email(connection, email):
 	cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
 	record = cursor.fetchone()
 	return dict(record) if record is not None else None
+
+def update_api_key_use_count(connection, api_key):
+	query = sql.SQL("UPDATE api_keys SET use_count=use_count+1 WHERE api_key={} RETURNING use_count;").format(sql.Literal(api_key))
+	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)	
+	cursor.execute(query)
+	return cursor.fetchone()[0]
 
 def update_data_record(connection, id, data):
 	query = sql.SQL("UPDATE data SET {} WHERE id={};").format(sql.SQL(", ").join(map(lambda kv: sql.SQL("{}={}").format(sql.Identifier(kv[0]), sql.Literal(kv[1])), data.items())), sql.Literal(id))

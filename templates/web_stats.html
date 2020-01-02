@@ -8,25 +8,38 @@
 	<div class="stats">
 		<div>
 			<h2>Total Data Records</h2>
-			{{data.count}}
+			{{ data.count }}
 		</div>
 		<div>
 			<h2>Total API Keys</h2>
-			{{data.count_api_keys}}
+			{{ data.count_api_keys }}
 		</div>
 		<div>
 			<h2>Total Users</h2>
-			{{data.count_users}}
+			{{ data.count_users }}
 		</div>
 	</div>
 
-	<h2>Recent Records</h2>
-	<div class="recent">
-		{% for item in data.recent %}
-		<div class="id"><a href="/web/view/{{item.request_id}}" target="_blank">{{item.request_id}}</a></div>
-		<div class="url"><a href="{{item.url}}" target="_blank">{{item.url}}</a></div class="url">
-		<div class="timestamp">{{item.timestamp}}</div>
-		{% endfor %}
+	<div class="api-keys-container">
+		<h2>API Key Usage</h2>
+		<div class="api-keys">
+			{% for item in data.api_key_use_counts %}
+			<div class="api_key">{{ item.api_key }}</div>
+			<div class="email">{{ item.email }}</div>
+			<div class="use_count">{{ item.use_count }}</div>
+			{% endfor %}
+		</div>
+	</div>
+
+	<div class="recent-container">
+		<h2>Recent Records</h2>
+		<div class="recent">
+			{% for item in data.recent %}
+			<div class="id"><a href="/web/view/{{ item.request_id }}" target="_blank">{{ item.request_id }}</a></div>
+			<div class="url"><a href="{{ item.url }}" target="_blank">{{ item.url }}</a></div class="url">
+			<div class="timestamp">{{ item.timestamp }}</div>
+			{% endfor %}
+		</div>
 	</div>
 </div>
 {% include "footer.html" %}

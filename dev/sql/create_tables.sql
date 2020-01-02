@@ -3,6 +3,7 @@ CREATE TABLE "api_keys"
 	"id" serial NOT NULL,
 	"api_key" char(36) NOT NULL,
 	"user_id" INTEGER NOT NULL,
+	"use_count" INTEGER NOT NULL DEFAULT 0,
 	"timestamp" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	PRIMARY KEY (id)
 );

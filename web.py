@@ -60,6 +60,7 @@ def api_capture(api_key):
 			return json.dumps({"error": "A request for this exact URL is currently pending."}), 429
 		data = {"request_id": request_id, "url": settings["url"], "block_id": 0, "user_id": user_id, "queued": "true", "pruned": "false", "flagged": "false", "removed": "false", "failed": "false"}
 		db.create_data_record(connection, data)
+		db.update_api_key_use_count(connection, api_key)
 		connection.commit()
 		payload = {"request_id": request_id, "settings": settings}
 		queue.put(json.dumps(payload), ttr=int(os.getenv("WWW2PNG_PROCESSING_TTR")))
@@ -224,7 +225,8 @@ def web_stats():
 		"count": db.get_data_record_count(connection)["count"],
 		"count_api_keys": db.get_api_key_count(connection)["count"],
 		"count_users": db.get_user_count(connection)["count"],
-		"recent": db.get_recent_data_records(connection, 100)
+		"recent": db.get_recent_data_records(connection, 100),
+		"api_key_use_counts": db.get_api_key_use_counts(connection)
 	}
 	return render_template("web_stats.html", page_title=conv.page_title("Count"), data=data, dirs=conv.html_dirs())
 
