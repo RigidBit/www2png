@@ -17,14 +17,14 @@
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr;
 		margin: 0 auto $spacing-lead-tail-thin auto;
-		max-width: 1024px;
+		max-width: 1280px;
 	}
 
 	.api-keys-container
 	{
 		border: 1px solid $border-color-default;
 		margin: 0 auto $spacing-lead-tail-thin auto;
-		max-width: 1024px;
+		max-width: 1280px;
 
 		.api-keys
 		{
@@ -43,7 +43,7 @@
 	{
 		border: 1px solid $border-color-default;
 		margin: 0 auto $spacing-lead-tail-thin auto;
-		max-width: 1024px;
+		max-width: 1280px;
 
 		.recent
 		{
