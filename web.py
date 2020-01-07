@@ -50,6 +50,7 @@ def privacy_policy():
 @api_key_required
 def api_capture(api_key):
 	connection = db.connect()
+	db.lock_data_table(connection)
 	queue = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_QUEUE"))
 	form = v.CaptureForm(request.values)
 	if form.validate():
@@ -157,17 +158,19 @@ def api_activate(api_key):
 		data = {"header": "ERROR", "error": "The API Key you specified is not valid or has already been activated."}
 		return render_template("error.html", page_title=conv.page_title("error"), data=data, dirs=conv.html_dirs())
 
-@app.route("/web/buried", methods=["GET"])
-@app.route("/web/buried/<action>/<int:job_id>", methods=["GET"])
-def web_buried(action=None, job_id=None):
+@app.route("/web/buried", methods=["GET", "POST"])
+def web_buried():
 	queue = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_QUEUE"))
-	try:
-		if action == "delete" and job_id is not None:
-			queue.delete(job_id)
-		elif action == "kick" and job_id is not None:
-			queue.kick_job(job_id)
-	except greenstalk.NotFoundError:
-		return redirect("/web/buried", code=302)
+	form = v.BuriedForm()
+	if form.validate_on_submit():
+		try:
+			print(form.data)
+			if form.data["action"] == "delete" and form.data["job_id"] is not None:
+				queue.delete(form.data["job_id"])
+			elif form.data["action"] == "kick" and form.data["job_id"] is not None:
+				queue.kick_job(form.data["job_id"])
+		except greenstalk.NotFoundError:
+			return redirect("/buried", code=302)
 	try:
 		job = queue.peek_buried()
 		data = {"job_body": job.body, "job_id": job.id}
@@ -178,6 +181,7 @@ def web_buried(action=None, job_id=None):
 @app.route("/web/capture", methods=["POST"])
 def web_capture():
 	connection = db.connect()
+	db.lock_data_table(connection)
 	queue = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_QUEUE"))
 	form = v.CaptureForm()
 	if form.validate_on_submit():

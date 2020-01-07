@@ -119,6 +119,11 @@ def get_user_record_by_email(connection, email):
 	record = cursor.fetchone()
 	return dict(record) if record is not None else None
 
+def lock_data_table(connection):
+	cursor = connection.cursor()
+	cursor.execute("BEGIN;")
+	cursor.execute("LOCK TABLE data IN ACCESS EXCLUSIVE MODE;")
+
 def update_api_key_use_count(connection, api_key):
 	query = sql.SQL("UPDATE api_keys SET use_count=use_count+1 WHERE api_key={} RETURNING use_count;").format(sql.Literal(api_key))
 	cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)	

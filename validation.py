@@ -14,3 +14,9 @@ class ApiKeyForm(FlaskForm):
 	class Meta:
 		csrf = False
 	email = StringField("email", validators=[DataRequired(), Email()])
+
+class BuriedForm(FlaskForm):
+	class Meta:
+		csrf = False
+	action = StringField("action", validators=[DataRequired()])
+	job_id = IntegerField("job_id", validators=[DataRequired()])
