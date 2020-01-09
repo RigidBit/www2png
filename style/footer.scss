@@ -4,52 +4,87 @@ footer
 {
 	background: #eeeeee;
 	overflow: hidden;
-	position: relative;
+	padding: $padding-thick;
 
-	div.logo
+	div.grid-container
 	{
-		margin: $margin-thick auto $margin-thick auto;
-		text-align: center;
-		
-		img.logo
-		{
-			width: 200px;
-		}
-	}
-
-	.text
-	{
+		display: grid;
+		grid-template-columns: 3fr 150px 150px;
+		grid-column-gap: $margin-thick;
 		margin: 0 auto $margin-default auto;
-		max-width: 600px;
-		padding: 0 $padding-default 0 $padding-default;
-		width: 100%;
+		max-width: 950px;
 
-		.links
+		@media screen and (max-width: #{map-get($breakpoints, "tablet")})
+		{
+			display: block;
+		}
+
+		.text
+		{
+			position: relative;
+
+			div.logo
+			{
+				@media screen and (max-width: #{map-get($breakpoints, "tablet")})
+				{
+					text-align: center;
+				}
+
+				img.logo
+				{
+					height: 30px;
+					position: relative;
+					left: -5px;
+					top: -5px;
+
+					@media screen and (max-width: #{map-get($breakpoints, "tablet")})
+					{
+						left: 0;
+						top: 0;
+					}
+				}
+			}
+		}
+	
+		.links,
+		.external-links
 		{
 			padding: 0;
-			text-align: center;
+
+			@media screen and (max-width: #{map-get($breakpoints, "tablet")})
+			{
+				text-align: center;
+			}
+
+			h2
+			{
+				font-weight: 600;
+			}
+
+			@media screen and (max-width: #{map-get($breakpoints, "tablet")})
+			{
+				h2
+				{
+					display: none;
+				}
+			}
 
 			ul
 			{
 				list-style: none;
-				margin-bottom: $margin-default;
+				margin-bottom: $margin-thick;
 				padding: 0;
 
 				li
 				{
-					display: inline-block;
-					padding: $padding-default;
-
+					display: block;
+					padding: 0;
+					margin: 0;
+					
 					@media screen and (max-width: #{map-get($breakpoints, "tablet")})
 					{
-						display: block;
-						padding: 0;
-					}
-
-					a
-					{
-						display: block;
-						margin-bottom: $margin-thin;
+						display: inline-block;
+						padding: 0 $margin-button/2;
 					}
 				}
 			}
