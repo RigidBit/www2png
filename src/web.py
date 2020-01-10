@@ -12,7 +12,7 @@ import mimetypes
 import os
 import requests
 
-from decorators import api_key_required, api_key_and_request_id_required
+from decorators import admin_required, api_key_required, api_key_and_request_id_required
 import misc
 import database as db
 import validation as v
@@ -186,6 +186,7 @@ def api_imgur(api_key, request_id):
 		return ({"error": "Image upload failed."}, r.status_code)
 
 @app.route("/web/buried", methods=["GET", "POST"])
+@admin_required
 def web_buried():
 	"""Web endpoint for viewing buried entries."""
 	queue = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_QUEUE"))
@@ -252,6 +253,7 @@ def web_proof(request_id):
 	return render_template("error.html", page_title=misc.page_title("404"), data={"header": "404", "error": f"""Request ID not found: {request_id}"""}), 404
 
 @app.route("/web/stats", methods=["GET"])
+@admin_required
 def web_stats():
 	"""Web endpoint to view site stats."""
 	connection = db.connect()
