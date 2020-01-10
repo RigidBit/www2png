@@ -15,7 +15,6 @@ module.exports =
 				use:
 				[
 					MiniCssExtractPlugin.loader,
-					// "style-loader",
 					{
 						loader: "css-loader",
 						options: { url: false }
@@ -23,10 +22,6 @@ module.exports =
 					"sass-loader",
 				],
 			},
-			// {
-			// 	test: /\.css$/i,
-			// 	use: [MiniCssExtractPlugin.loader, "css-loader"],
-			// },
 		],
 	},
 	optimization:
@@ -47,7 +42,6 @@ module.exports =
 	},
 	output:
 	{
-		// filename: "site.css",
 		path: path.resolve(__dirname, "static/style"),
 	},
 	plugins:
