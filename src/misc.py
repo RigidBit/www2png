@@ -38,13 +38,6 @@ def data_record_to_web_view(data):
 	data["prune_timestamp"] = data["timestamp"] + int(os.getenv("WWW2PNG_SCREENSHOT_PRUNE_DELAY"))
 	return data
 
-def html_dirs():
-	"""Determine the required HTML directories."""
-	data = {}
-	data["image_dir"] = os.getenv("WWW2PNG_IMAGE_DIR")
-	data["style_dir"] = os.getenv("WWW2PNG_STYLE_DIR")
-	return data
-
 def screenshot_settings(form_values):
 	"""Generate the screenshot settings."""
 	defaults = json.loads(os.getenv("WWW2PNG_SCREENSHOT_SETTINGS_DEFAULT"))

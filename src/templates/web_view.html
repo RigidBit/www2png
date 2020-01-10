@@ -9,11 +9,11 @@
 			{% if data.screenshot_available %}
 				<a href="/web/image/{{data.request_id}}" target="_blank"><img class="screenshot" src="/web/image/{{data.request_id}}" alt="Screenshot {{data.request_id}}"></a>
 			{% elif data.queued %}
-				<img class="screenshot pending" src="/{{dirs.image_dir}}/pending.svg" alt="Screenshot Pending">
+				<img class="screenshot pending" src="/static/image/pending.svg" alt="Screenshot Pending">
 			{% elif data.failed %}
-				<img class="screenshot failed" src="/{{dirs.image_dir}}/failed.svg" alt="Screenshot Failed">
+				<img class="screenshot failed" src="/static/image/failed.svg" alt="Screenshot Failed">
 			{% else %}
-				<img class="screenshot unavailable" src="/{{dirs.image_dir}}/trash-can.png" alt="Screenshot Unavailable">
+				<img class="screenshot unavailable" src="/static/image/trash-can.png" alt="Screenshot Unavailable">
 			{% endif %}
 		</div>
 	</div>
