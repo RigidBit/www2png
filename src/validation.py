@@ -1,3 +1,7 @@
+"""
+Validation functions for user submitted form data.
+"""
+
 from flask_wtf import FlaskForm
 from wtforms import BooleanField, IntegerField, StringField
 from wtforms.validators import DataRequired, Email, Optional, URL, regexp as regexp_validator

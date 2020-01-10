@@ -1,3 +1,7 @@
+"""
+Decorators for the web and API endpoints.
+"""
+
 from functools import wraps
 import json
 

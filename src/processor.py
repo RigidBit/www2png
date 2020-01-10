@@ -1,3 +1,7 @@
+"""
+Handles the processing of all capture requests.
+"""
+
 from dotenv import load_dotenv
 import greenstalk
 import json

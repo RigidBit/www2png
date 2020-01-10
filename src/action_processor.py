@@ -1,3 +1,7 @@
+"""
+Handles the processing of actions in the action queue.
+"""
+
 from dotenv import load_dotenv
 import greenstalk
 import json

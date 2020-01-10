@@ -1,3 +1,7 @@
+"""
+Blockchain related functions.
+"""
+
 import json
 import mimetypes
 import os

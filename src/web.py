@@ -1,3 +1,7 @@
+"""
+Primary program logic for all web and API endpoints.
+"""
+
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify, render_template, send_from_directory, Response, redirect
 from uuid import uuid4

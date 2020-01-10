@@ -1,3 +1,7 @@
+"""
+Screenshot related functions.
+"""
+
 from selenium import webdriver
 import json
 import os

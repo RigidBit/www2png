@@ -1,3 +1,7 @@
+"""
+Database functions.
+"""
+
 from psycopg2 import sql
 import os
 import psycopg2
