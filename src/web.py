@@ -13,7 +13,7 @@ import os
 import requests
 
 from decorators import api_key_required, api_key_and_request_id_required
-import conversion as conv
+import misc
 import database as db
 import validation as v
 
@@ -29,12 +29,12 @@ app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
 def api_help():
 	"""Web endpoint for API Help page."""
 	data = {"base_url": os.getenv("WWW2PNG_BASE_URL")}
-	return render_template("api_help.html", page_title=conv.page_title("api_help"), dirs=conv.html_dirs(), data=data)
+	return render_template("api_help.html", page_title=misc.page_title("api_help"), dirs=misc.html_dirs(), data=data)
 
 @app.route("/contact", methods=["GET"])
 def contact():
 	"""Web endpoint for Contact page."""
-	return render_template("contact.html", page_title=conv.page_title("contact"), dirs=conv.html_dirs())
+	return render_template("contact.html", page_title=misc.page_title("contact"), dirs=misc.html_dirs())
 
 @app.route("/ping", methods=["GET"])
 def ping():
@@ -46,12 +46,12 @@ def ping():
 @app.route("/terms_of_service", methods=["GET"])
 def terms_of_service():
 	"""Web endpoint for the Terms of Service page."""
-	return render_template("terms_of_service.html", page_title=conv.page_title("tos"), dirs=conv.html_dirs())
+	return render_template("terms_of_service.html", page_title=misc.page_title("tos"), dirs=misc.html_dirs())
 
 @app.route("/privacy_policy", methods=["GET"])
 def privacy_policy():
 	"""Web endpoint for the Privacy Policy page."""
-	return render_template("privacy_policy.html", page_title=conv.page_title("pp"), dirs=conv.html_dirs())
+	return render_template("privacy_policy.html", page_title=misc.page_title("pp"), dirs=misc.html_dirs())
 
 ##### DYNAMIC API ROUTES #####
 
@@ -65,7 +65,7 @@ def api_capture(api_key):
 	form = v.CaptureForm(request.values)
 	if form.validate():
 		request_id = str(uuid4())
-		settings = conv.screenshot_settings(request.values)
+		settings = misc.screenshot_settings(request.values)
 		user_id = db.get_api_key_record_by_api_key(connection, api_key)["user_id"]
 		if db.check_pending_request(connection, settings["url"], user_id):
 			return json.dumps({"error": "A request for this exact URL is currently pending."}), 429
@@ -126,7 +126,7 @@ def api_status(api_key, request_id):
 	data = db.get_data_record_by_request_id(connection, request_id)
 	if data == None:
 		return (json.dumps({"error": "Invalid Request ID provided."}), 404)
-	payload = conv.data_record_to_api_status(data)
+	payload = misc.data_record_to_api_status(data)
 	return (json.dumps(payload), 200)
 
 @app.route("/api/request", methods=["POST"])
@@ -144,7 +144,7 @@ def api_request():
 		data = {"email": email, "challenge": challenge}
 		payload = {"action": "send_api_request_email", "data": data}
 		actions.put(json.dumps(payload), ttr=int(os.getenv("WWW2PNG_PROCESSING_TTR")))
-		return render_template("web_api_key_requested.html", page_title=conv.page_title("api_request"), data=data, dirs=conv.html_dirs())
+		return render_template("web_api_key_requested.html", page_title=misc.page_title("api_request"), data=data, dirs=misc.html_dirs())
 	else:
 		for key in form.errors:
 			return json.dumps({"error": form.errors[key][0]}), 400
@@ -168,10 +168,10 @@ def api_activate(api_key):
 		db.create_api_key_record(connection, data)
 		connection.commit()
 		data = {"api_key": api_key, "base_url": os.getenv("WWW2PNG_BASE_URL")}
-		return render_template("web_api_key_activated.html", page_title=conv.page_title("api_activate"), data=data, dirs=conv.html_dirs())
+		return render_template("web_api_key_activated.html", page_title=misc.page_title("api_activate"), data=data, dirs=misc.html_dirs())
 	else:
 		data = {"header": "ERROR", "error": "The API Key you specified is not valid or has already been activated."}
-		return render_template("error.html", page_title=conv.page_title("error"), data=data, dirs=conv.html_dirs())
+		return render_template("error.html", page_title=misc.page_title("error"), data=data, dirs=misc.html_dirs())
 
 @app.route("/web/buried", methods=["GET", "POST"])
 def web_buried():
@@ -192,7 +192,7 @@ def web_buried():
 		data = {"job_body": job.body, "job_id": job.id}
 	except greenstalk.NotFoundError:
 		data = {}
-	return render_template("buried.html", page_title=conv.page_title("buried"), data=data, dirs=conv.html_dirs())
+	return render_template("buried.html", page_title=misc.page_title("buried"), data=data, dirs=misc.html_dirs())
 
 @app.route("/web/capture", methods=["POST"])
 def web_capture():
@@ -203,7 +203,7 @@ def web_capture():
 	form = v.CaptureForm()
 	if form.validate_on_submit():
 		request_id = str(uuid4())
-		settings = conv.screenshot_settings(request.values)
+		settings = misc.screenshot_settings(request.values)
 		data = {"request_id": request_id, "url": settings["url"], "block_id": 0, "user_id": 1, "queued": "true", "pruned": "false", "flagged": "false", "removed": "false", "failed": "false"}
 		db.create_data_record(connection, data)
 		connection.commit()
@@ -212,7 +212,7 @@ def web_capture():
 		return redirect("/web/view/"+request_id, code=303)
 	else:
 		for key in form.errors:
-			return render_template("error.html", page_title=conv.page_title("500"), data={"header": "Error", "error": f"""{key}: {form.errors[key][0]}"""}, dirs=conv.html_dirs()), 400
+			return render_template("error.html", page_title=misc.page_title("500"), data={"header": "Error", "error": f"""{key}: {form.errors[key][0]}"""}, dirs=misc.html_dirs()), 400
 
 @app.route("/web/image/<request_id>", methods=["GET"])
 def web_image(request_id):
@@ -220,7 +220,7 @@ def web_image(request_id):
 	connection = db.connect()
 	data = db.get_data_record_by_request_id(connection, request_id)
 	if data == None or data["removed"] or data["pruned"] or data["queued"]:
-		return render_template("error.html", page_title=conv.page_title("404"), data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=conv.html_dirs()), 404
+		return render_template("error.html", page_title=misc.page_title("404"), data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=misc.html_dirs()), 404
 	else:
 		filename = request_id+".png"
 		as_attachment = "download" in request.values and request.values["download"] == "true"
@@ -238,7 +238,7 @@ def web_proof(request_id):
 			url = os.getenv("RIGIDBIT_BASE_URL") + "/api/trace-block/" + str(data_record["block_id"])
 			content = requests.get(url, headers=headers).content
 			return Response(content, mimetype="application/json", headers={"Content-disposition": f"attachment; filename={request_id}.json"})
-	return render_template("error.html", page_title=conv.page_title("404"), data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=conv.html_dirs()), 404
+	return render_template("error.html", page_title=misc.page_title("404"), data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=misc.html_dirs()), 404
 
 @app.route("/web/stats", methods=["GET"])
 def web_stats():
@@ -252,7 +252,7 @@ def web_stats():
 		"recent": db.get_recent_data_records(connection, 100),
 		"api_key_use_counts": db.get_api_key_use_counts(connection)
 	}
-	return render_template("web_stats.html", page_title=conv.page_title("Count"), data=data, dirs=conv.html_dirs())
+	return render_template("web_stats.html", page_title=misc.page_title("Count"), data=data, dirs=misc.html_dirs())
 
 @app.route("/web/view/<request_id>", methods=["GET"])
 def web_view(request_id):
@@ -260,16 +260,16 @@ def web_view(request_id):
 	connection = db.connect()
 	data = db.get_data_record_by_request_id(connection, request_id)
 	if data != None:
-		data = conv.data_record_to_web_view(data)
+		data = misc.data_record_to_web_view(data)
 		data["base_url"] = os.getenv("WWW2PNG_BASE_URL")
-		return render_template("web_view.html", page_title="WWW2PNG - Webpage Screenshot Service with Blockchain Anchoring", dirs=conv.html_dirs(), data=data)
+		return render_template("web_view.html", page_title="WWW2PNG - Webpage Screenshot Service with Blockchain Anchoring", dirs=misc.html_dirs(), data=data)
 	else:
-		return render_template("error.html", page_title=conv.page_title("404"), data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=conv.html_dirs()), 404
+		return render_template("error.html", page_title=misc.page_title("404"), data={"header": "404", "error": f"""Request ID not found: {request_id}"""}, dirs=misc.html_dirs()), 404
 
 @app.route("/", methods=["GET"])
 def root():
 	"""Web endpoint for the landing page."""
-	return render_template("index.html", page_title=conv.page_title("default"), dirs=conv.html_dirs())
+	return render_template("index.html", page_title=misc.page_title("default"), dirs=misc.html_dirs())
 
 if __name__ == "__main__":
 	app.run(host="0.0.0.0")
