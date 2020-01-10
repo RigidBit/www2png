@@ -117,15 +117,13 @@ python3 processor.py
 python3 action_processor.py
 ```
 
-## Building
+## Deploying to Production
 
 ### Building static assets for production:
 This builds all static CSS assets and puts them in the `static` folder.
 ```
 npm build
 ```
-
-## Deploying
 
 ### Web:
 Copy the following files and folders to the remote server.
