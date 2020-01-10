@@ -4,7 +4,9 @@
 {% include "header.html" %}
 {% if data.job_id is defined %}
 <div class="main-content-container buried">
-	<form id="form" method="get">
+	<form id="form" action="/web/buried" method="post">
+		<input id="action" type="hidden" name="action" value="">
+		<input type="hidden" name="job_id" value="{{ data.job_id }}">
 		<button id="delete" class="button" type="button">Delete</button>
 		<button id="kick" class="button" type="button">Retry</button>
 	</form>
@@ -14,13 +16,12 @@
 	<script>
 		$("#delete").on("click", (e)=>
 		{
-			$("#form").prop("action", "/web/buried/delete/{{ data.job_id }}");
+			$("#action").val("delete");
 			$("#form").submit();
 		});
-
 		$("#kick").on("click", (e)=>
 		{
-			$("#form").prop("action", "/web/buried/kick/{{ data.job_id }}");
+			$("#action").val("kick");
 			$("#form").submit();
 		});
 	</script>
