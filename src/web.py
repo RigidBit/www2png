@@ -173,6 +173,18 @@ def api_activate(api_key):
 		data = {"header": "ERROR", "error": "The API Key you specified is not valid or has already been activated."}
 		return render_template("error.html", page_title=misc.page_title("error"), data=data)
 
+@app.route("/api/upload-to-imgur/<request_id>", methods=["GET"])
+@api_key_and_request_id_required
+def api_imgur(api_key, request_id):
+	"""API endpoint to upload an image to Imgur."""
+	headers = {"Authorization": f"""Client-ID {os.getenv("IMGUR_CLIENT_ID")}"""}
+	data = os.getenv("RIGIDBIT_BASE_URL") + "/web/image/" + request_id
+	r = requests.post("https://api.imgur.com/3/image", data=data, headers=headers)
+	if r.status_code == 200:
+		return ({"url": r.json()["data"]["link"]}, 200)
+	else:
+		return ({"error": "Image upload failed."}, r.status_code)
+
 @app.route("/web/buried", methods=["GET", "POST"])
 def web_buried():
 	"""Web endpoint for viewing buried entries."""
@@ -253,6 +265,17 @@ def web_stats():
 		"api_key_use_counts": db.get_api_key_use_counts(connection)
 	}
 	return render_template("web_stats.html", page_title=misc.page_title("Count"), data=data)
+
+@app.route("/web/upload-to-imgur/<request_id>", methods=["GET"])
+def web_imgur(request_id):
+	"""Web endpoint to upload an image to Imgur."""
+	headers = {"Authorization": f"""Client-ID {os.getenv("IMGUR_CLIENT_ID")}"""}
+	data = os.getenv("RIGIDBIT_BASE_URL") + "/web/image/" + request_id
+	r = requests.post("https://api.imgur.com/3/image", data=data, headers=headers)
+	if r.status_code == 200:
+		return ({"url": r.json()["data"]["link"]}, 200)
+	else:
+		return ({"error": "Image upload failed."}, r.status_code)
 
 @app.route("/web/view/<request_id>", methods=["GET"])
 def web_view(request_id):
