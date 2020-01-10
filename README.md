@@ -1,6 +1,8 @@
-# www2png
+# WWW2PNG
 
 This is the primary codebase for the www2png web application.
+
+WWW2PNG is a free webpage screenshot service API with blockchain anchoring.
 
 ## Development Prerequisites
 
@@ -25,36 +27,64 @@ You must have the following installed in your development environment to properl
 
 ## Development Server Prerequisites
 
+* Beanstalkd (https://beanstalkd.github.io/)
+* PostgreSQL (https://www.postgresql.org/)
+* RigidBit (https://www.rigidbit.com/)
+* Selenium Server (https://selenium.dev/)
+* Chrome Webdriver (https://chromedriver.chromium.org/)
+
+## Production Server Prerequisites
+
 * Apache or Nginx with WSGI/UWSGI capability.
 * Beanstalkd (https://beanstalkd.github.io/)
 * PostgreSQL (https://www.postgresql.org/)
 * RigidBit (https://www.rigidbit.com/)
-* Selenium server with Chrome webdriver.
-
-## Basic Webserver Setup Procedure
-* Create a web directory and create an initialized venv directory within it.
-* Install dependencies within the venv.
-* Populate .env with secrets and settings.
-* Configure webserver to use WSGI with the venv and serve static content from the static and data directories.
+* Selenium Server (https://selenium.dev/)
+* Chrome Webdriver (https://chromedriver.chromium.org/)
 
 ## Development Setup
 
-### Using a venv is recommended.
+### Supported Platforms
+
+Ubuntu Linux 18.04 is the official development environment, however it may also work with other environments.
+
+## Basic Webserver Setup Procedure
+* Configure all server prerequisites.
+* Create a web directory and create an initialized venv directory within it.
+* Install dependencies within the venv.
+* Populate .env with secrets and settings.
+* Configure PostgreSQL server with a new database, user, and install the tables from `dev/sql/create_tables.sql`.
+* Configure webserver to use WSGI with the venv and serve static content from the static directory.
+
+## Developing
+
+### Using a venv is highly recommended.
 ```
 python -m venv init venv
 source venv/bin/activate
 ```
 
-### Installing dependencies:
+### Installing dependencies from requirements.txt:
 ```
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Saving dependencies:
+### Saving dependencies to requirements.txt:
 Using `pipreqs` is recommended over `pip`. While in an active venv use the following to regenerate `requirements.txt`.
 ```
 pipreqs --ignore node_modules --force
+```
+
+### Setting up the .env file:
+
+See `README_ENV.md` for a basic template.
+
+### Creating symbolic links:
+Symbolic links will need to be setup from the src directory to the corresponding folders in the project root.
+```
+ln -s ../data src/data
+ln -s ../static src/static
 ```
 
 ### Starting the development server:
@@ -64,6 +94,7 @@ npm run flask
 ```
 or
 ```
+source venv/bin/activate
 FLASK_APP=src/web.py FLASK_DEBUG=1 python -m flask run -h 0.0.0.0 -p 5000
 ```
 
@@ -90,7 +121,48 @@ source venv/bin/activate
 python3 action_processor.py
 ```
 
+## Building
+
 ### Building static assets for production:
+This builds all static CSS assets and puts them in the `static` folder.
 ```
 npm build
 ```
+
+## Deploying
+
+### Web:
+Copy the following files and folders to the remote server.
+```
+src
+static
+requirements.txt
+uwsgi.ini
+```
+Create the following empty folders.
+```
+data
+venv
+```
+Create symbolic links.
+```
+ln -s ../data src/data
+ln -s ../static src/static
+```
+Create a venv and install the requirements.
+```
+python -m venv init venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+Setup your webserver to serve static content from the static folder.
+
+### Setting up services:
+You will need to also setup services for:
+- action_processor.py
+- processor.py
+- pruner.py
+- uwsgi.py
+
+You can use any service manager, but `systemd` is recommended. See `README_SERVICES.md` for a basic template.
