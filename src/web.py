@@ -68,7 +68,7 @@ def api_capture(api_key):
 		settings = misc.screenshot_settings(request.values)
 		user_id = db.get_api_key_record_by_api_key(connection, api_key)["user_id"]
 		if db.check_pending_request(connection, settings["url"], user_id):
-			return json.dumps({"error": "A request for this exact URL is currently pending."}), 429
+			return ({"error": "A request for this exact URL is currently pending."}, 429)
 		data = {"request_id": request_id, "url": settings["url"], "block_id": 0, "user_id": user_id, "queued": "true", "pruned": "false", "flagged": "false", "removed": "false", "failed": "false"}
 		db.create_data_record(connection, data)
 		db.update_api_key_use_count(connection, api_key)
@@ -81,10 +81,10 @@ def api_capture(api_key):
 			"image_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/image/{api_key}/{request_id}""",
 			"proof_url": f"""{os.getenv("WWW2PNG_BASE_URL")}/api/proof/{api_key}/{request_id}""",
 		}
-		return (json.dumps(payload), 200)
+		return (payload, 200)
 	else:
 		for key in form.errors:
-			return json.dumps({"error": form.errors[key][0]}), 400
+			return ({"error": form.errors[key][0]}, 400)
 
 @app.route("/api/image/<api_key>/<request_id>", methods=["GET"])
 @api_key_and_request_id_required
@@ -93,9 +93,9 @@ def api_image(api_key, request_id):
 	connection = db.connect()
 	data = db.get_data_record_by_request_id(connection, request_id)
 	if data["queued"]:
-		return (json.dumps({"error": "Request ID is valid, but image is not yet available."}), 202)
+		return ({"error": "Request ID is valid, but image is not yet available."}, 202)
 	elif data["removed"] or data["pruned"]:
-		return (json.dumps({"error": "Image not available."}), 410)
+		return ({"error": "Image not available."}, 410)
 	else:
 		filename = request_id+".png"
 		as_attachment = "download" in request.values and request.values["download"] == "true"
@@ -114,7 +114,7 @@ def api_proof(api_key, request_id):
 		content = requests.get(url, headers=headers).content
 		return Response(content, mimetype="application/json", headers={"Content-disposition": f"attachment; filename={request_id}.json"})
 	else:
-		return json.dumps({"error": "Request ID is valid, but proof is not yet available."}), 202
+		return ({"error": "Request ID is valid, but proof is not yet available."}, 202)
 
 @app.route("/api/status/<api_key>/<request_id>", methods=["GET"])
 @api_key_and_request_id_required
@@ -122,12 +122,12 @@ def api_status(api_key, request_id):
 	"""API endpoint for checking the status of an existing capture."""
 	connection = db.connect()
 	if not db.check_api_key_exists(connection, api_key):
-		return (json.dumps({"error": "Invalid API Key provided."}), 403)
+		return ({"error": "Invalid API Key provided."}, 403)
 	data = db.get_data_record_by_request_id(connection, request_id)
 	if data == None:
-		return (json.dumps({"error": "Invalid Request ID provided."}), 404)
+		return ({"error": "Invalid Request ID provided."}, 404)
 	payload = misc.data_record_to_api_status(data)
-	return (json.dumps(payload), 200)
+	return (payload, 200)
 
 @app.route("/api/request", methods=["POST"])
 def api_request():
@@ -147,7 +147,7 @@ def api_request():
 		return render_template("web_api_key_requested.html", page_title=misc.page_title("api_request"), data=data)
 	else:
 		for key in form.errors:
-			return json.dumps({"error": form.errors[key][0]}), 400
+			return ({"error": form.errors[key][0]}, 400)
 
 @app.route("/api/activate/<api_key>", methods=["GET"])
 def api_activate(api_key):
@@ -192,7 +192,6 @@ def web_buried():
 	form = v.BuriedForm()
 	if form.validate_on_submit():
 		try:
-			print(form.data)
 			if form.data["action"] == "delete" and form.data["job_id"] is not None:
 				queue.delete(form.data["job_id"])
 			elif form.data["action"] == "kick" and form.data["job_id"] is not None:
