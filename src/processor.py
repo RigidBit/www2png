@@ -12,12 +12,14 @@ import database as db
 import screenshot as ss
 
 def log_message(message):
+	"""Log a message the console."""
 	if os.getenv("WWW2PNG_VERBOSE") == "true":
 		print(threading.current_thread().name, message)
 		print("")
 		sys.stdout.flush()
 
 def start_processing_thread():
+	"""Start a processing thread."""
 	connection = psycopg2.connect(dbname=os.getenv("POSTGRESQL_DB"), host=os.getenv("POSTGRESQL_HOST"), port=os.getenv("POSTGRESQL_PORT"), user=os.getenv("POSTGRESQL_USER"), password=os.getenv("POSTGRESQL_PASS"))
 	queue = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), watch=[os.getenv("GREENSTALK_TUBE_QUEUE")])
 	while True:

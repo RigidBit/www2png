@@ -4,6 +4,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 def send_api_request_email(smtp_receiver, challenge):
+	"""Send an API request e-mail."""
 	smtp_sender = os.getenv("SMTP_SENDER")
 	smtp_host = os.getenv("SMTP_HOST")
 	smtp_port = int(os.getenv("SMTP_PORT"))

@@ -3,6 +3,7 @@ import json
 import os
 
 def data_record_to_api_status(data):
+	"""Convert a data record to and API status record."""
 	data_web_view = data_record_to_web_view(data)
 	data = {
 		"request_id": data["request_id"],
@@ -16,6 +17,7 @@ def data_record_to_api_status(data):
 	return data
 
 def data_record_to_web_view(data):
+	"""Convert a data record into a web view record."""
 	if data["failed"]:
 		data["status"] = "failed"
 	elif data["removed"]:
@@ -33,12 +35,14 @@ def data_record_to_web_view(data):
 	return data
 
 def html_dirs():
+	"""Determine the required HTML directories."""
 	data = {}
 	data["image_dir"] = os.getenv("WWW2PNG_IMAGE_DIR")
 	data["style_dir"] = os.getenv("WWW2PNG_STYLE_DIR")
 	return data
 
 def screenshot_settings(form_values):
+	"""Generate the screenshot settings."""
 	defaults = json.loads(os.getenv("WWW2PNG_SCREENSHOT_SETTINGS_DEFAULT"))
 
 	settings = {}
@@ -57,6 +61,7 @@ def screenshot_settings(form_values):
 	return settings
 
 def page_title(id):
+	"""Determine the page title."""
 	switcher = {
 		"404": "Error 404: Not Found - WWW2PNG",
 		"api_activate": "API Key Activated - WWW2PNG",

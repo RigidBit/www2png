@@ -23,25 +23,30 @@ app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
 
 @app.route("/api/help", methods=["GET"])
 def api_help():
+	"""Web endpoint for API Help page."""
 	data = {"base_url": os.getenv("WWW2PNG_BASE_URL")}
 	return render_template("api_help.html", page_title=conv.page_title("api_help"), dirs=conv.html_dirs(), data=data)
 
 @app.route("/contact", methods=["GET"])
 def contact():
+	"""Web endpoint for Contact page."""
 	return render_template("contact.html", page_title=conv.page_title("contact"), dirs=conv.html_dirs())
 
 @app.route("/ping", methods=["GET"])
 def ping():
+	"""Web endpoint for testing connectivity. This is good for uptime checkers."""
 	connection = db.connect()
 	db.check_api_key_exists(connection, "")
 	return "Pong!"
 
 @app.route("/terms_of_service", methods=["GET"])
 def terms_of_service():
+	"""Web endpoint for the Terms of Service page."""
 	return render_template("terms_of_service.html", page_title=conv.page_title("tos"), dirs=conv.html_dirs())
 
 @app.route("/privacy_policy", methods=["GET"])
 def privacy_policy():
+	"""Web endpoint for the Privacy Policy page."""
 	return render_template("privacy_policy.html", page_title=conv.page_title("pp"), dirs=conv.html_dirs())
 
 ##### DYNAMIC API ROUTES #####
@@ -49,6 +54,7 @@ def privacy_policy():
 @app.route("/api/capture/<api_key>", methods=["GET"])
 @api_key_required
 def api_capture(api_key):
+	"""API endpoint for capturing a new screenshot."""
 	connection = db.connect()
 	db.lock_data_table(connection)
 	queue = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_QUEUE"))
@@ -79,6 +85,7 @@ def api_capture(api_key):
 @app.route("/api/image/<api_key>/<request_id>", methods=["GET"])
 @api_key_and_request_id_required
 def api_image(api_key, request_id):
+	"""API endpoint for requesting an image once it is available."""
 	connection = db.connect()
 	data = db.get_data_record_by_request_id(connection, request_id)
 	if data["queued"]:
@@ -93,6 +100,7 @@ def api_image(api_key, request_id):
 @app.route("/api/proof/<api_key>/<request_id>", methods=["GET"])
 @api_key_and_request_id_required
 def api_proof(api_key, request_id):
+	"""API endpoint to download a blockchain proof once available."""
 	connection = db.connect()
 	data_record = db.get_data_record_by_request_id(connection, request_id)
 	proof_available = True if int((datetime.datetime.now() - data_record["timestamp"]).total_seconds()) > int(os.getenv("RIGIDBIT_PROOF_DELAY")) else False
@@ -107,6 +115,7 @@ def api_proof(api_key, request_id):
 @app.route("/api/status/<api_key>/<request_id>", methods=["GET"])
 @api_key_and_request_id_required
 def api_status(api_key, request_id):
+	"""API endpoint for checking the status of an existing capture."""
 	connection = db.connect()
 	if not db.check_api_key_exists(connection, api_key):
 		return (json.dumps({"error": "Invalid API Key provided."}), 403)
@@ -118,6 +127,7 @@ def api_status(api_key, request_id):
 
 @app.route("/api/request", methods=["POST"])
 def api_request():
+	"""API endpoint to register a user and request a new API key."""
 	connection = db.connect()
 	actions = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_ACTIONS"))
 	form = v.ApiKeyForm()
@@ -137,6 +147,7 @@ def api_request():
 
 @app.route("/api/activate/<api_key>", methods=["GET"])
 def api_activate(api_key):
+	"""API endpoint to activate an API key."""
 	connection = db.connect()
 	record = db.get_unverified_user_record_by_challenge(connection, api_key)
 	if record != None:
@@ -160,6 +171,7 @@ def api_activate(api_key):
 
 @app.route("/web/buried", methods=["GET", "POST"])
 def web_buried():
+	"""Web endpoint for viewing buried entries."""
 	queue = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_QUEUE"))
 	form = v.BuriedForm()
 	if form.validate_on_submit():
@@ -180,6 +192,7 @@ def web_buried():
 
 @app.route("/web/capture", methods=["POST"])
 def web_capture():
+	"""Web endpoint to capture a new screenshot."""
 	connection = db.connect()
 	db.lock_data_table(connection)
 	queue = greenstalk.Client(host=os.getenv("GREENSTALK_HOST"), port=os.getenv("GREENSTALK_PORT"), use=os.getenv("GREENSTALK_TUBE_QUEUE"))
@@ -199,6 +212,7 @@ def web_capture():
 
 @app.route("/web/image/<request_id>", methods=["GET"])
 def web_image(request_id):
+	"""Web endpoint to download an image once available."""
 	connection = db.connect()
 	data = db.get_data_record_by_request_id(connection, request_id)
 	if data == None or data["removed"] or data["pruned"] or data["queued"]:
@@ -210,6 +224,7 @@ def web_image(request_id):
 
 @app.route("/web/proof/<request_id>", methods=["GET"])
 def web_proof(request_id):
+	"""Web endpoint to download a blockchain proof once available."""
 	connection = db.connect()
 	data_record = db.get_data_record_by_request_id(connection, request_id)
 	if data_record != None:
@@ -223,6 +238,7 @@ def web_proof(request_id):
 
 @app.route("/web/stats", methods=["GET"])
 def web_stats():
+	"""Web endpoint to view site stats."""
 	connection = db.connect()
 	data = \
 	{
@@ -236,6 +252,7 @@ def web_stats():
 
 @app.route("/web/view/<request_id>", methods=["GET"])
 def web_view(request_id):
+	"""Web endpoint to view the status and content of a request."""
 	connection = db.connect()
 	data = db.get_data_record_by_request_id(connection, request_id)
 	if data != None:
@@ -247,6 +264,7 @@ def web_view(request_id):
 
 @app.route("/", methods=["GET"])
 def root():
+	"""Web endpoint for the landing page."""
 	return render_template("index.html", page_title=conv.page_title("default"), dirs=conv.html_dirs())
 
 if __name__ == "__main__":

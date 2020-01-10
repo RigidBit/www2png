@@ -8,6 +8,7 @@ import database as db
 import screenshot as ss
 
 def log_message(message):
+	"""Log a message the console."""
 	if os.getenv("WWW2PNG_VERBOSE") == "true":
 		print(message)
 		print("")

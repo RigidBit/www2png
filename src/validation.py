@@ -3,6 +3,7 @@ from wtforms import BooleanField, IntegerField, StringField
 from wtforms.validators import DataRequired, Email, Optional, URL, regexp as regexp_validator
 
 class CaptureForm(FlaskForm):
+	"""Validation for web and API capture requests."""
 	class Meta:
 		csrf = False
 	delay = StringField("delay", validators=[Optional(), regexp_validator(r"^\d+$")])
@@ -11,11 +12,13 @@ class CaptureForm(FlaskForm):
 	url = StringField("url", validators=[DataRequired(), URL()])
 
 class ApiKeyForm(FlaskForm):
+	"""Validation for API key requests."""
 	class Meta:
 		csrf = False
 	email = StringField("email", validators=[DataRequired(), Email()])
 
 class BuriedForm(FlaskForm):
+	"""Validation for buried job management."""
 	class Meta:
 		csrf = False
 	action = StringField("action", validators=[DataRequired()])

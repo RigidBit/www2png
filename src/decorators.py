@@ -4,6 +4,7 @@ import json
 import database as db
 
 def api_key_required(func):
+	"""Guard to ensure a valid API key is provided."""
 	@wraps(func)
 	def wrapper(api_key, *args, **kwargs):
 		connection = db.connect()
@@ -13,6 +14,7 @@ def api_key_required(func):
 	return wrapper
 
 def request_id_required(func):
+	"""Guard to ensure a valid Request ID is provided."""
 	@wraps(func)
 	def wrapper(request_id, *args, **kwargs):
 		connection = db.connect()
@@ -22,6 +24,7 @@ def request_id_required(func):
 	return wrapper
 
 def api_key_and_request_id_required(func):
+	"""Guard to ensure a valid API key and Request ID are provided."""
 	@wraps(func)
 	def wrapper(api_key, request_id, *args, **kwargs):
 		connection = db.connect()
