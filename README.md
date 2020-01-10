@@ -58,6 +58,8 @@ Ubuntu Linux 18.04 is the official development environment, however it may also 
 
 ## Developing
 
+The steps below outline how to setup and start the development environment. This is different than production!
+
 ### Using a venv is highly recommended.
 ```
 python -m venv init venv
@@ -66,7 +68,6 @@ source venv/bin/activate
 
 ### Installing dependencies from requirements.txt:
 ```
-source venv/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -89,12 +90,10 @@ ln -s ../static src/static
 
 ### Starting the development server:
 ```
-source venv/bin/activate
 npm run flask
 ```
 or
 ```
-source venv/bin/activate
 FLASK_APP=src/web.py FLASK_DEBUG=1 python -m flask run -h 0.0.0.0 -p 5000
 ```
 
@@ -105,19 +104,16 @@ npm start
 
 ### Starting the pruning service:
 ```
-source venv/bin/activate
 python3 pruner.py
 ```
 
 ### Starting the processing service:
 ```
-source venv/bin/activate
 python3 processor.py
 ```
 
 ### Starting the aciton processing service:
 ```
-source venv/bin/activate
 python3 action_processor.py
 ```
 
@@ -134,8 +130,9 @@ npm build
 ### Web:
 Copy the following files and folders to the remote server.
 ```
-src
-static
+src/*.py
+src/templates/*
+static/*
 requirements.txt
 uwsgi.ini
 ```
@@ -156,7 +153,11 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Setup your webserver to serve static content from the static folder.
+### Configuring the web server:
+
+Setup your webserver to serve static content from the `static` folder. All other requests should be sent to the uWSGI handler.
+
+See `README_NGINX.md` for a basic Nginx configuration example.
 
 ### Setting up services:
 You will need to also setup services for:
@@ -165,4 +166,4 @@ You will need to also setup services for:
 - pruner.py
 - uwsgi.py
 
-You can use any service manager, but `systemd` is recommended. See `README_SERVICES.md` for a basic template.
+You can use any service manager, but `systemd` is recommended. See `README_SERVICES.md` for a basic configuration examples.
