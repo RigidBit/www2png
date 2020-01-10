@@ -173,12 +173,12 @@ def api_activate(api_key):
 		data = {"header": "ERROR", "error": "The API Key you specified is not valid or has already been activated."}
 		return render_template("error.html", page_title=misc.page_title("error"), data=data)
 
-@app.route("/api/upload-to-imgur/<request_id>", methods=["GET"])
+@app.route("/api/upload-to-imgur/<api_key>/<request_id>", methods=["GET"])
 @api_key_and_request_id_required
 def api_imgur(api_key, request_id):
 	"""API endpoint to upload an image to Imgur."""
 	headers = {"Authorization": f"""Client-ID {os.getenv("IMGUR_CLIENT_ID")}"""}
-	data = os.getenv("RIGIDBIT_BASE_URL") + "/web/image/" + request_id
+	data = os.getenv("WWW2PNG_BASE_URL") + "/web/image/" + request_id
 	r = requests.post("https://api.imgur.com/3/image", data=data, headers=headers)
 	if r.status_code == 200:
 		return ({"url": r.json()["data"]["link"]}, 200)
@@ -269,7 +269,7 @@ def web_stats():
 def web_imgur(request_id):
 	"""Web endpoint to upload an image to Imgur."""
 	headers = {"Authorization": f"""Client-ID {os.getenv("IMGUR_CLIENT_ID")}"""}
-	data = os.getenv("RIGIDBIT_BASE_URL") + "/web/image/" + request_id
+	data = os.getenv("WWW2PNG_BASE_URL") + "/web/image/" + request_id
 	r = requests.post("https://api.imgur.com/3/image", data=data, headers=headers)
 	if r.status_code == 200:
 		return ({"url": r.json()["data"]["link"]}, 200)
