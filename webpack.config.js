@@ -5,7 +5,7 @@ const path = require("path");
 module.exports =
 {
 	mode: "production",
-	entry: "./style/site.scss",
+	entry: "./src/style/site.scss",
 	module:
 	{
 		rules:
