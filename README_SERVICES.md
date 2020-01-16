@@ -1,6 +1,7 @@
 # WWW2PNG Services
 
 ## action_processor.py
+The action processor handles events such as the sending of emails.
 ```
 [Unit]
 Description=WWW2PNG Action Processor
@@ -20,6 +21,7 @@ WantedBy=multi-user.target
 ```
 
 ## processor.py
+The processor handles the most important tasks, such as the actual creation of screenshots.
 ```
 [Unit]
 Description=WWW2PNG Processor
@@ -39,6 +41,7 @@ WantedBy=multi-user.target
 ```
 
 ## pruner.py
+The pruner removes expired records and files.
 ```
 [Unit]
 Description=WWW2PNG Pruner
@@ -58,6 +61,7 @@ WantedBy=multi-user.target
 ```
 
 ## uwsgi
+The UWSGI server handles execution of Python scripts for the web server. UWSGI is just one of several possible ways to run Python scripts with a webserver.
 ```
 [Unit]
 Description=Www2png uWSGI

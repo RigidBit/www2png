@@ -2,7 +2,7 @@
 
 This is the primary codebase for the www2png web application.
 
-WWW2PNG is a free webpage screenshot service API with blockchain anchoring.
+WWW2PNG is a free webpage screenshot service API with blockchain anchoring using RigidBit and Ethereum.
 
 ## Development Prerequisites
 

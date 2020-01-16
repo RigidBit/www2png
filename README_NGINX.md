@@ -17,7 +17,7 @@ server {
         }
 
         location / {
-                uwsgi_pass 127.0.0.1:9092;
+                uwsgi_pass 127.0.0.1:9090;
                 include uwsgi_params;
         }
 }

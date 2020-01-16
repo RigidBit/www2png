@@ -2,7 +2,7 @@
 
 The following code goes in the `.env` file within the root folder.
 
-Be sure to replace all the unpopulated values below with their correct values.
+Be sure to update all values below with their correct values before attempting to use.
 
 The `.env` file should never be committed!
 
