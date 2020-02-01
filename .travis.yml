@@ -9,6 +9,7 @@ language: python
 before_script:
   - psql -c 'create database www2png;' -U postgres
   - psql -U postgres -w -d www2png -q -f dev/sql/create_tables.sql
+  - psql -U postgres -w -d www2png -q -f dev/test/data.sql
   - cp dev/test/.env.travis .env
 script:
   - python -m unittest discover src
