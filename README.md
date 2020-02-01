@@ -165,3 +165,12 @@ You will need to also setup services for:
 - uwsgi.py
 
 You can use any service manager, but `systemd` is recommended. See `README_SERVICES.md` for a basic configuration examples.
+
+## Testing
+
+Setup the venv, symlinks, and database as noted above. The `.env` will need to be populated with valid settings. The webserver and uWSGI is not needed for testing.
+
+To launch tests execute the following command from the project root:
+```
+python -m unittest discover src
+```
