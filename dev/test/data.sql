@@ -20,7 +20,6 @@ SET row_security = off;
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: www2png
 --
 
-INSERT INTO public.users (id, email, disabled, "timestamp") VALUES (1, 'public@www2png.com', false, '2020-02-01 14:33:37.043833');
 INSERT INTO public.users (id, email, disabled, "timestamp") VALUES (2, 'support@www2png.com', false, '2020-02-01 14:34:12.268259');
 
 
@@ -43,7 +42,7 @@ INSERT INTO public.data (id, request_id, url, block_id, user_id, queued, pruned,
 -- Data for Name: unverified_users; Type: TABLE DATA; Schema: public; Owner: www2png
 --
 
-INSERT INTO public.unverified_users (id, email, challenge, "timestamp") VALUES (1, 'invalid@www2png.com', '8723971f-b44b-4d83-aead-634d7e6b2eac', '2020-02-01 14:33:54.882009');
+INSERT INTO public.unverified_users (id, email, challenge, "timestamp") VALUES (1, 'test@www2png.com', '8723971f-b44b-4d83-aead-634d7e6b2eac', '2020-02-01 14:33:54.882009');
 
 
 --
