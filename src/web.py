@@ -171,7 +171,7 @@ def api_activate(api_key):
 		return render_template("web_api_key_activated.html", page_title=misc.page_title("api_activate"), data=data)
 	else:
 		data = {"header": "ERROR", "error": "The API Key you specified is not valid or has already been activated."}
-		return render_template("error.html", page_title=misc.page_title("error"), data=data)
+		return render_template("error.html", page_title=misc.page_title("error"), data=data), 404
 
 @app.route("/api/upload-to-imgur/<api_key>/<request_id>", methods=["GET"])
 @api_key_and_request_id_required
