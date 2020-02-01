@@ -1,5 +1,11 @@
 # WWW2PNG
 
+[![Build Status](https://travis-ci.com/RigidBit/www2png.svg?branch=master)](https://travis-ci.com/RigidBit/www2png)
+[![Requirements Status](https://requires.io/github/RigidBit/www2png/requirements.svg?branch=master)](https://requires.io/github/RigidBit/www2png/requirements/?branch=master)
+![Status](https://img.shields.io/uptimerobot/status/m784258484-83b6f024e12c22ea73b5d0f6)
+![Uptime](https://img.shields.io/uptimerobot/ratio/m784258484-83b6f024e12c22ea73b5d0f6)
+![Twitter Follow](https://img.shields.io/twitter/follow/www2png?style=social)
+
 This is the primary codebase for the www2png web application.
 
 WWW2PNG is a free webpage screenshot service API with blockchain anchoring using RigidBit and Ethereum.
