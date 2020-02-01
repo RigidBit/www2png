@@ -25,6 +25,11 @@ app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
 
 ##### STATIC ROUTES #####
 
+@app.route("/", methods=["GET"])
+def root():
+	"""Web endpoint for the landing page."""
+	return render_template("index.html", page_title=misc.page_title("default"))
+
 @app.route("/api/help", methods=["GET"])
 def api_help():
 	"""Web endpoint for API Help page."""
@@ -43,15 +48,15 @@ def ping():
 	db.check_api_key_exists(connection, "")
 	return "Pong!"
 
-@app.route("/terms_of_service", methods=["GET"])
-def terms_of_service():
-	"""Web endpoint for the Terms of Service page."""
-	return render_template("terms_of_service.html", page_title=misc.page_title("tos"))
-
 @app.route("/privacy_policy", methods=["GET"])
 def privacy_policy():
 	"""Web endpoint for the Privacy Policy page."""
 	return render_template("privacy_policy.html", page_title=misc.page_title("pp"))
+
+@app.route("/terms_of_service", methods=["GET"])
+def terms_of_service():
+	"""Web endpoint for the Terms of Service page."""
+	return render_template("terms_of_service.html", page_title=misc.page_title("tos"))
 
 ##### DYNAMIC API ROUTES #####
 
@@ -185,6 +190,8 @@ def api_imgur(api_key, request_id):
 	else:
 		return ({"error": "Image upload failed."}, r.status_code)
 
+##### DYNAMIC WEB ROUTES #####
+
 @app.route("/web/buried", methods=["GET", "POST"])
 @admin_required
 def web_buried():
@@ -289,11 +296,6 @@ def web_view(request_id):
 		return render_template("web_view.html", page_title="WWW2PNG - Webpage Screenshot Service with Blockchain Anchoring", data=data)
 	else:
 		return render_template("error.html", page_title=misc.page_title("404"), data={"header": "404", "error": f"""Request ID not found: {request_id}"""}), 404
-
-@app.route("/", methods=["GET"])
-def root():
-	"""Web endpoint for the landing page."""
-	return render_template("index.html", page_title=misc.page_title("default"))
 
 if __name__ == "__main__":
 	app.run(host="0.0.0.0")
