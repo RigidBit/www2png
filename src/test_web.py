@@ -15,6 +15,7 @@ class TestWeb(LiveServerTestCase):
 	def create_app(self):
 		app = application
 		app.config["TESTING"] = True
+		app.config['LIVESERVER_PORT'] = 15000
 		return app
 
 	def test_root(self):
