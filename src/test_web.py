@@ -20,6 +20,7 @@ class TestWeb(LiveServerTestCase):
 		return app
 
 	# Static Routes
+
 	def test_root(self):
 		response = requests.get(self.get_server_url())
 		self.assertEqual(response.status_code, 200)
@@ -45,6 +46,8 @@ class TestWeb(LiveServerTestCase):
 		self.assertEqual(response.status_code, 200)
 
 	# API Routes
+
+	# This needs to be updated so it doesn't fail on dev systems with 429.
 	def test_api_capture(self):
 		response = requests.get(self.get_server_url() + "/api/capture/b813d0a3-f82f-4128-b1b6-a13957a42440?url=https%3A%2F%2Fyahoo.com")
 		self.assertEqual(response.status_code, 200)
@@ -138,6 +141,7 @@ class TestWeb(LiveServerTestCase):
 		self.assertEqual(response.status_code, 404)
 
 	# Web Routes
+
 	def test_web_buried(self):
 		response = requests.get(self.get_server_url() + "/web/buried", auth=requests.auth.HTTPBasicAuth("", "password"))
 		self.assertEqual(response.status_code, 200)
@@ -146,6 +150,7 @@ class TestWeb(LiveServerTestCase):
 		response = requests.get(self.get_server_url() + "/web/buried")
 		self.assertEqual(response.status_code, 401)
 
+	# This needs to be updated so it doesn't fail on dev systems with 429.
 	def test_web_capture(self):
 		data = {"url": "https://www.google.com/"}
 		response = requests.post(self.get_server_url() + "/web/capture", data=data)
