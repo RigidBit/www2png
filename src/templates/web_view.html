@@ -7,7 +7,7 @@
 		<h2>Screenshot</h2>
 		<div class="screenshot-container">
 			{% if data.screenshot_available %}
-				<a href="/web/image/{{data.request_id}}" target="_blank"><img class="screenshot" src="/web/image/{{data.request_id}}" alt="Screenshot {{data.request_id}}"></a>
+				<a href="/web/image/{{data.request_id}}"><img class="screenshot" src="/web/image/{{data.request_id}}" alt="Screenshot {{data.request_id}}"></a>
 			{% elif data.queued %}
 				<img class="screenshot pending" src="/static/image/pending.svg" alt="Screenshot Pending">
 			{% elif data.failed %}
@@ -21,7 +21,7 @@
 		<h2>Details</h2>
 		<div class="details-container">
 			<div class="metric detail request_id">Request ID</div><div class="value detail request_id"><a href="/web/view/{{data.request_id}}">{{data.request_id}}</a></div>
-			<div class="metric detail url">URL</div><div class="value detail url"><a href="{{data.url}}" target="_blank">{{data.url}}</a></div>
+			<div class="metric detail url">URL</div><div class="value detail url"><a href="{{data.url}}">{{data.url}}</a></div>
 			<div class="metric detail timestamp">Timestamp</div><div class="value detail timestamp"></div>
 			{% if data.screenshot_available %}
 			<div class="metric detail prune_timestamp">Time Until Prune</div><div class="value detail prune_timestamp"></div>
@@ -32,13 +32,13 @@
 			<!-- <div class="metric detail download">Download</div> -->
 			<div class="value detail download">
 			{% if data.screenshot_available %}
-				<a class="button" href="/web/image/{{ data.request_id }}?download=true" target="_blank"><i class="fas fa-download icon"></i>Download Screenshot</a>
+				<a class="button" href="/web/image/{{ data.request_id }}?download=true"><i class="fas fa-download icon"></i>Download Screenshot</a>
 			{% endif %}
 			{% if data.proof_available %}
-				<a class="button" href="/web/proof/{{ data.request_id }}" target="_blank"><i class="fas fa-download icon"></i>Download Proof</a>
+				<a class="button" href="/web/proof/{{ data.request_id }}"><i class="fas fa-download icon"></i>Download Proof</a>
 			{% endif %}
 			{% if data.screenshot_available %}
-				<a class="imgur button" href="https://api.imgur.com/3/image" target="_blank"><i class="fas fa-upload icon"></i>Upload To Imgur</a>
+				<a class="imgur button" href="https://api.imgur.com/3/image"><i class="fas fa-upload icon"></i>Upload To Imgur</a>
 			{% endif %}
 			</div>
 			{% endif %}
