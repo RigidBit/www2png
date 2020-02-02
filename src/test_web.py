@@ -16,7 +16,7 @@ class TestWeb(LiveServerTestCase):
 	def create_app(self):
 		app = application
 		app.config["TESTING"] = True
-		app.config['LIVESERVER_PORT'] = 15000
+		app.config["LIVESERVER_PORT"] = 0
 		return app
 
 	# Static Routes
