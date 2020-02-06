@@ -5,6 +5,8 @@ Miscelaneous functions.
 import datetime
 import json
 import os
+import sys
+import threading
 
 def data_record_to_api_status(data):
 	"""Convert a data record to and API status record."""
@@ -37,6 +39,12 @@ def data_record_to_web_view(data):
 	data["timestamp"] = int(data["timestamp"].timestamp())
 	data["prune_timestamp"] = data["timestamp"] + int(os.getenv("WWW2PNG_SCREENSHOT_PRUNE_DELAY"))
 	return data
+
+def log_message(message):
+	"""Log a message the console."""
+	if os.getenv("WWW2PNG_VERBOSE") == "true":
+		print(threading.current_thread().name, message)
+		sys.stdout.flush()
 
 def screenshot_settings(form_values):
 	"""Generate the screenshot settings."""

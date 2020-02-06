@@ -8,14 +8,9 @@ import os
 import sys
 import time
 
+from misc import log_message
 import database as db
 import screenshot as ss
-
-def log_message(message):
-	"""Log a message the console."""
-	if os.getenv("WWW2PNG_VERBOSE") == "true":
-		print(message)
-		print("")
 
 def prune_expired_data_records(connection):
 	records = db.get_expired_data_records(connection, int(os.getenv("WWW2PNG_SCREENSHOT_PRUNE_DELAY")))
@@ -38,18 +33,18 @@ def prune_expired_unverified_user_records(connection):
 
 ##### ENTRY POINT #####
 
-load_dotenv()
-connection = psycopg2.connect(dbname=os.getenv("POSTGRESQL_DB"), host=os.getenv("POSTGRESQL_HOST"), port=os.getenv("POSTGRESQL_PORT"), user=os.getenv("POSTGRESQL_USER"), password=os.getenv("POSTGRESQL_PASS"))
-
-while True:
-	try:
-		prune_expired_data_records(connection)
-		connection.commit()
-		prune_expired_unverified_user_records(connection)
-		connection.commit()
-	except Exception as e:
-		log_message("Buried.")
-		raise e
-	finally:
-		sys.stdout.flush()
-	time.sleep(int(os.getenv("WWW2PNG_PRUNE_LOOP_DELAY")))
+if __name__ == "__main__":
+	load_dotenv()
+	with db.connect() as connection:
+		while True:
+			try:
+				prune_expired_data_records(connection)
+				connection.commit()
+				prune_expired_unverified_user_records(connection)
+				connection.commit()
+			except Exception as e:
+				log_message("Buried.")
+				raise e
+			finally:
+				sys.stdout.flush()
+			time.sleep(int(os.getenv("WWW2PNG_PRUNE_LOOP_DELAY")))
