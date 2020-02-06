@@ -11,6 +11,5 @@ before_script:
   - psql -U postgres -w -d www2png -q -f dev/sql/create_tables.sql
   - psql -U postgres -w -d www2png -q -f dev/test/data.sql
   - cp dev/test/.env.travis .env
-  - pip install -e git+https://github.com/jordanmack/greenstalk.git#egg=greenstalk
 script:
   - python -m unittest discover tests
