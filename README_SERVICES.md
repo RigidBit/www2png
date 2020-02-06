@@ -9,7 +9,7 @@ After=syslog.target
 
 [Service]
 Type=simple
-ExecStart=/var/www/www2png.com/venv/bin/python3 /var/www/www2png.com/src/action_processor.py
+ExecStart=/var/www/www2png.com/venv/bin/python3 /var/www/www2png.com/www2png/action_processor.py
 WorkingDirectory=/var/www/www2png.com
 User=www-data
 Group=www-data
@@ -29,7 +29,7 @@ After=syslog.target
 
 [Service]
 Type=simple
-ExecStart=/var/www/www2png.com/venv/bin/python3 /var/www/www2png.com/src/processor.py
+ExecStart=/var/www/www2png.com/venv/bin/python3 /var/www/www2png.com/www2png/processor.py
 WorkingDirectory=/var/www/www2png.com
 User=www-data
 Group=www-data
@@ -49,7 +49,7 @@ After=syslog.target
 
 [Service]
 Type=simple
-ExecStart=/var/www/www2png.com/venv/bin/python3 /var/www/www2png.com/src/pruner.py
+ExecStart=/var/www/www2png.com/venv/bin/python3 /var/www/www2png.com/www2png/pruner.py
 WorkingDirectory=/var/www/www2png.com
 User=www-data
 Group=www-data
