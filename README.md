@@ -178,5 +178,9 @@ Setup the venv, symlinks, and database as noted above. The `.env` will need to b
 
 To launch tests execute the following command from the project root:
 ```
+npm run test
+```
+or
+```
 python -m unittest discover src
 ```

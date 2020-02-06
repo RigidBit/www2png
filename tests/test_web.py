@@ -1,8 +1,13 @@
-import unittest
-import uuid
-import requests
 from flask import Flask
 from flask_testing import LiveServerTestCase
+import os
+import requests
+import sys
+import unittest
+import uuid
+
+# Fix path to allow application import.
+sys.path.insert(2, os.path.abspath(os.path.join(sys.path[0], "..", "www2png")))
 from web import app as application
 
 # Suppress logging output.

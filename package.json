@@ -7,7 +7,8 @@
   {
     "start": "npx webpack --watch --config webpack.config.js",
     "build": "npx webpack --config webpack.config.js",
-    "flask": "FLASK_APP=src/web.py FLASK_DEBUG=1 python -m flask run -h 0.0.0.0 -p 5000"
+    "flask": "FLASK_APP=www2png/web.py FLASK_DEBUG=1 python3 -m flask run -h 0.0.0.0 -p 5000",
+    "test": "python3 -m unittest discover tests"
   },
   "author": "",
   "license": "",

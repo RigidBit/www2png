@@ -13,4 +13,4 @@ before_script:
   - cp dev/test/.env.travis .env
   - pip install -e git+https://github.com/jordanmack/greenstalk.git#egg=greenstalk
 script:
-  - python -m unittest discover src
+  - python -m unittest discover tests
