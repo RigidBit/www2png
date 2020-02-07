@@ -182,5 +182,5 @@ npm run test
 ```
 or
 ```
-python -m unittest discover src
+python -m unittest discover tests
 ```
