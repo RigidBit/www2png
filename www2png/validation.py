@@ -13,7 +13,7 @@ class CaptureForm(FlaskForm):
 	delay = StringField("delay", validators=[Optional(), regexp_validator(r"^\d+$")])
 	full_page = StringField("full_page", validators=[Optional(), regexp_validator(r"^(true|false)$")])
 	resolution = StringField("resolution", validators=[Optional(), regexp_validator(r"^\d+x\d+$")])
-	url = StringField("url", validators=[DataRequired(), URL()])
+	url = StringField("url", validators=[DataRequired(), regexp_validator(r"^http[s]*://")])
 
 class ApiKeyForm(FlaskForm):
 	"""Validation for API key requests."""
