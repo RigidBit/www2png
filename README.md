@@ -48,6 +48,13 @@ You must have the following installed in your development environment to properl
 * Selenium Server (https://selenium.dev/)
 * Chrome Webdriver (https://chromedriver.chromium.org/)
 
+### Production Server Fonts
+
+Websites in languages that do not use Roman characters may require additional fonts to display correctly. The fonts DejaVu and Noto are free fonts that can be installed which handle many of the common languages.
+
+* fonts-noto (https://www.google.com/get/noto/)
+* ttf-dejavu (https://dejavu-fonts.github.io/)
+
 ## Development Setup
 
 ### Supported Platforms
