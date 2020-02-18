@@ -23,6 +23,9 @@ load_dotenv()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
 
+if __name__ == "__main__":
+	app.run(host="0.0.0.0")
+
 ##### STATIC ROUTES #####
 
 @app.route("/", methods=["GET"])
@@ -293,6 +296,3 @@ def web_view(request_id):
 			return render_template("web_view.html", page_title="WWW2PNG - Webpage Screenshot Service with Blockchain Anchoring", data=data)
 		else:
 			return render_template("error.html", page_title=misc.page_title("404"), data={"header": "404", "error": f"""Request ID not found: {request_id}"""}), 404
-
-if __name__ == "__main__":
-	app.run(host="0.0.0.0")
