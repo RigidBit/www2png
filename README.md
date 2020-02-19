@@ -141,8 +141,8 @@ npm build
 ### Web:
 Copy the following files and folders to the remote server.
 ```
-src/*.py
-src/templates/*
+www2png/*.py
+www2png/templates/*
 static/*
 requirements.txt
 uwsgi.ini
@@ -150,12 +150,11 @@ uwsgi.ini
 Create the following empty folders.
 ```
 data
-venv
 ```
 Create symbolic links.
 ```
-ln -s ../data src/data
-ln -s ../static src/static
+ln -s ./data www2png/data
+ln -s ./static www2png/static
 ```
 Create a venv and install the requirements.
 ```
